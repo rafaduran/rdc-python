@@ -7,7 +7,8 @@ import sys
 
 from PyQt4 import QtCore
 from PyQt4.QtGui import (QApplication, QDialog, QListWidget, QPushButton, 
-                         QVBoxLayout, QGridLayout, QInputDialog, QLineEdit) 
+                         QVBoxLayout, QGridLayout, QInputDialog, QLineEdit, 
+                         QMessageBox) 
 
 class StringListDlg(QDialog):
     '''
@@ -21,11 +22,12 @@ class StringListDlg(QDialog):
         titled with 'Edit name List', where name is the first parameter.
         """
         super(StringListDlg, self).__init__(parent)
-        self.stringlist = QtCore.QStringList(initial_list)
         self.name = name
         
+        self.stringlist = QtCore.QStringList()
+        
         self.list_widget = QListWidget(self)
-        self.list_widget.addItems(self.stringlist)
+        self.list_widget.addItems(initial_list)
         add_button = QPushButton("&Add...")
         edit_button = QPushButton("&Edit...")
         remove_button = QPushButton("&Remove...")
@@ -46,6 +48,7 @@ class StringListDlg(QDialog):
         layout = QGridLayout(self)
         layout.addWidget(self.list_widget, 0, 0)
         layout.addLayout(button_layout, 0, 1)
+        self.setLayout(layout)
         
         self.connect(edit_button, QtCore.SIGNAL("clicked()"), self.edit_dlg)
         self.connect(add_button, QtCore.SIGNAL("clicked()"), self.add_dlg)
@@ -60,8 +63,6 @@ class StringListDlg(QDialog):
                      self.down_button_callback)
         self.connect(sort_button, QtCore.SIGNAL("clicked()"), 
                      self.list_widget.sortItems)
-        self.connect(sort_button, QtCore.SIGNAL("clicked()"), 
-                     self.stringlist.sort)
         self.connect(close_button, QtCore.SIGNAL("clicked()"), self.close)
         
         self.setWindowTitle('Edit ' + self.name + ' list')
@@ -72,34 +73,35 @@ class StringListDlg(QDialog):
         Selected item from list go up/down one position depending on which
         button has been clicked.
         """
-        current_index = self.list_widget.currentRow()
-        self.stringlist.move(current_index, current_index + direction)
-        self.list_widget.clear()
-        self.list_widget.addItems(self.stringlist)
-        self.list_widget.setCurrentRow(current_index + direction)
+        index = self.list_widget.currentRow()
+        if (index + direction) >= 0 and (index + direction) <= \
+            self.list_widget.count()-1:
+            item = self.list_widget.takeItem(index)
+            self.list_widget.insertItem(index + direction, item)
+            self.list_widget.setCurrentRow(index + direction)
     
     @QtCore.pyqtSlot()    
     def remove(self):
         """
         Remove current item
         """
-        current_index = self.list_widget.currentRow()
-        self.stringlist = self.stringlist[:current_index] + \
-            self.stringlist[current_index+1:]
-        self.list_widget.clear()
-        self.list_widget.addItems(self.stringlist)     
+        index = self.list_widget.currentRow()
+        if index is not None:
+            if QMessageBox.Yes == QMessageBox.question(self, "Remove %s" % \
+              self.name, "Are you sure?", QMessageBox.Yes | QMessageBox.No):
+                item = self.list_widget.takeItem(index)
+                del(item)
         
     @QtCore.pyqtSlot()
     def add_dlg(self):
         """
         Add items to stringlist
         """
-        text, ok_clicked = QInputDialog.getText(self, "Add " + self.name, 
-                                                "Add " + self.name)
-        if ok_clicked:
-            self.stringlist.append(unicode(text))
-            self.list_widget.clear()
-            self.list_widget.addItems(self.stringlist)
+        text, ok_clicked = QInputDialog.getText(self, "Add %s" % self.name, 
+                                                "Add %s" % self.name)
+        if ok_clicked and not text.isEmpty():
+            self.list_widget.insertItem(self.list_widget.currentRow() + 1, 
+                                        text)
             
     @QtCore.pyqtSlot()
     def edit_dlg(self):
@@ -107,13 +109,29 @@ class StringListDlg(QDialog):
         Edit items from stringlist
         """
         current_index = self.list_widget.currentRow()
-        text, ok_clicked = QInputDialog.getText(self, "Add " + self.name, 
-            "Add " + self.name, QLineEdit.Normal, 
-            self.stringlist[current_index])
-        if ok_clicked:
-            self.stringlist[current_index] = unicode(text)
-            self.list_widget.clear()
-            self.list_widget.addItems(self.stringlist)
+        text, ok_clicked = QInputDialog.getText(self, "Add %s" % self.name, 
+            "Add %s" % self.name, QLineEdit.Normal, 
+            self.list_widget.item(current_index).text())
+        if ok_clicked and not text.isEmpty():
+            self.remove()
+            self.list_widget.insertItem(current_index, text)
+            self.list_widget.setCurrentRow(current_index)
+    def reject(self):
+        """
+        Calls accept
+        """
+        self.accept()
+        
+    def accept(self):
+        """
+        When accepted returns item list
+        """
+        for index in range(self.list_widget.count()):
+            self.stringlist.append(self.list_widget.item(index).text())
+        self.emit(QtCore.SIGNAL("AcceptedList(QStringList)"), self.stringlist)
+        super(StringListDlg, self).accept()
+    
+    
         
 def main():
     '''
