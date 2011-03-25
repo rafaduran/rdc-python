@@ -43,7 +43,7 @@ class Rectangle(object):
         return "Rectangle(%d, %d)" % (self.width, self.height)
 
 
-class Rectangle(object):
+class Rectangle2(object):
 
     def __init__(self, width, height):
         self.width = width
@@ -63,7 +63,7 @@ class Rectangle(object):
         return "Rectangle(%d, %d)" % (self.width, self.height)
 
 
-class Rectangle(object):
+class Rectangle3(object):
 
     def __init__(self, width, height):
         self.__width = width
