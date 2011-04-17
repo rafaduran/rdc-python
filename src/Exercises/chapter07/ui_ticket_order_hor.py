@@ -1,0 +1,91 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file '/home/rdc/workspace/rdc-pyqt/src/Exercises/chapter07/ticket_order_hor.ui'
+#
+# Created: Mon Apr 11 22:03:22 2011
+#      by: PyQt4 UI code generator 4.7.4
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+class Ui_TicketOrderDlg(object):
+    def setupUi(self, TicketOrderDlg):
+        TicketOrderDlg.setObjectName("TicketOrderDlg")
+        TicketOrderDlg.resize(386, 132)
+        self.gridLayout = QtGui.QGridLayout(TicketOrderDlg)
+        self.gridLayout.setObjectName("gridLayout")
+        self.customer_label = QtGui.QLabel(TicketOrderDlg)
+        self.customer_label.setObjectName("customer_label")
+        self.gridLayout.addWidget(self.customer_label, 0, 0, 1, 1)
+        self.customer_line_edit = QtGui.QLineEdit(TicketOrderDlg)
+        self.customer_line_edit.setObjectName("customer_line_edit")
+        self.gridLayout.addWidget(self.customer_line_edit, 0, 1, 1, 5)
+        self.when_label = QtGui.QLabel(TicketOrderDlg)
+        self.when_label.setObjectName("when_label")
+        self.gridLayout.addWidget(self.when_label, 1, 0, 1, 1)
+        self.dateTimeEdit = QtGui.QDateTimeEdit(TicketOrderDlg)
+        self.dateTimeEdit.setCalendarPopup(True)
+        self.dateTimeEdit.setObjectName("dateTimeEdit")
+        self.gridLayout.addWidget(self.dateTimeEdit, 1, 1, 1, 2)
+        spacerItem = QtGui.QSpacerItem(123, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem, 1, 4, 1, 2)
+        self.price_label = QtGui.QLabel(TicketOrderDlg)
+        self.price_label.setObjectName("price_label")
+        self.gridLayout.addWidget(self.price_label, 2, 0, 1, 1)
+        self.price_spin_box = QtGui.QDoubleSpinBox(TicketOrderDlg)
+        self.price_spin_box.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.price_spin_box.setMaximum(5000.0)
+        self.price_spin_box.setObjectName("price_spin_box")
+        self.gridLayout.addWidget(self.price_spin_box, 2, 1, 1, 1)
+        self.quantity_label = QtGui.QLabel(TicketOrderDlg)
+        self.quantity_label.setObjectName("quantity_label")
+        self.gridLayout.addWidget(self.quantity_label, 2, 2, 1, 1)
+        self.quantity_spin_box = QtGui.QSpinBox(TicketOrderDlg)
+        self.quantity_spin_box.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.quantity_spin_box.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.quantity_spin_box.setMaximum(50)
+        self.quantity_spin_box.setObjectName("quantity_spin_box")
+        self.gridLayout.addWidget(self.quantity_spin_box, 2, 3, 1, 1)
+        self.amount_label = QtGui.QLabel(TicketOrderDlg)
+        self.amount_label.setObjectName("amount_label")
+        self.gridLayout.addWidget(self.amount_label, 2, 4, 1, 1)
+        self.amount_line_edit = QtGui.QLineEdit(TicketOrderDlg)
+        self.amount_line_edit.setEnabled(False)
+        self.amount_line_edit.setLayoutDirection(QtCore.Qt.RightToLeft)
+        self.amount_line_edit.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.amount_line_edit.setReadOnly(False)
+        self.amount_line_edit.setObjectName("amount_line_edit")
+        self.gridLayout.addWidget(self.amount_line_edit, 2, 5, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(375, 13, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem1, 3, 0, 1, 6)
+        self.button_box = QtGui.QDialogButtonBox(TicketOrderDlg)
+        self.button_box.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.button_box.setObjectName("button_box")
+        self.gridLayout.addWidget(self.button_box, 4, 2, 1, 4)
+        self.customer_label.setBuddy(self.customer_line_edit)
+        self.when_label.setBuddy(self.dateTimeEdit)
+        self.price_label.setBuddy(self.price_spin_box)
+        self.quantity_label.setBuddy(self.quantity_spin_box)
+        self.amount_label.setBuddy(self.amount_line_edit)
+
+        self.retranslateUi(TicketOrderDlg)
+        QtCore.QObject.connect(self.button_box, QtCore.SIGNAL("accepted()"), TicketOrderDlg.accept)
+        QtCore.QObject.connect(self.button_box, QtCore.SIGNAL("rejected()"), TicketOrderDlg.reject)
+        QtCore.QMetaObject.connectSlotsByName(TicketOrderDlg)
+        TicketOrderDlg.setTabOrder(self.customer_line_edit, self.dateTimeEdit)
+        TicketOrderDlg.setTabOrder(self.dateTimeEdit, self.price_spin_box)
+        TicketOrderDlg.setTabOrder(self.price_spin_box, self.quantity_spin_box)
+        TicketOrderDlg.setTabOrder(self.quantity_spin_box, self.amount_line_edit)
+        TicketOrderDlg.setTabOrder(self.amount_line_edit, self.button_box)
+
+    def retranslateUi(self, TicketOrderDlg):
+        TicketOrderDlg.setWindowTitle(QtGui.QApplication.translate("TicketOrderDlg", "Ticket order", None, QtGui.QApplication.UnicodeUTF8))
+        self.customer_label.setText(QtGui.QApplication.translate("TicketOrderDlg", "&Customer", None, QtGui.QApplication.UnicodeUTF8))
+        self.when_label.setText(QtGui.QApplication.translate("TicketOrderDlg", "&When", None, QtGui.QApplication.UnicodeUTF8))
+        self.price_label.setText(QtGui.QApplication.translate("TicketOrderDlg", "$Price", None, QtGui.QApplication.UnicodeUTF8))
+        self.price_spin_box.setPrefix(QtGui.QApplication.translate("TicketOrderDlg", "$", None, QtGui.QApplication.UnicodeUTF8))
+        self.quantity_label.setText(QtGui.QApplication.translate("TicketOrderDlg", "Quantity", None, QtGui.QApplication.UnicodeUTF8))
+        self.amount_label.setText(QtGui.QApplication.translate("TicketOrderDlg", "Amount", None, QtGui.QApplication.UnicodeUTF8))
+        self.amount_line_edit.setText(QtGui.QApplication.translate("TicketOrderDlg", "$ 0", None, QtGui.QApplication.UnicodeUTF8))
+
