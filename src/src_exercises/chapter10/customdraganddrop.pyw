@@ -76,12 +76,11 @@ class DnDListWidget(QListWidget):
             menu = QMenu(self)
             copy_action = menu.addAction("&Copy")
             move_action = menu.addAction("&Move")
-            # TODO: use lambda/functools.partial() and remove copy/move functions
-            self.connect(copy_action, SIGNAL("triggered()"), self.copy)
-            self.connect(move_action, SIGNAL("triggered()"), self.move)
+            self.connect(copy_action, SIGNAL("triggered()"), lambda:
+                    event.setDropAction(Qt.CopyAction))
+            self.connect(move_action, SIGNAL("triggered()"), lambda:
+                    event.setDropAction(Qt.MoveAction))
             menu.exec_(QCursor.pos())
-        else:
-            self.action = Qt.CopyAction
         if event.mimeData().hasFormat("application/x-icon-and-text"):
             data = event.mimeData().data("application/x-icon-and-text")
             stream = QDataStream(data, QIODevice.ReadOnly)
@@ -90,7 +89,6 @@ class DnDListWidget(QListWidget):
             stream >> text >> icon
             item = QListWidgetItem(text, self)
             item.setIcon(icon)
-            event.setDropAction(self.action)
             event.accept()
         else:
             event.ignore()
@@ -108,14 +106,8 @@ class DnDListWidget(QListWidget):
         pixmap = icon.pixmap(24, 24)
         drag.setHotSpot(QPoint(12, 12))
         drag.setPixmap(pixmap)
-        if drag.exec_(Qt.MoveAction|Qt.CopyAction, Qt.MoveAction) == Qt.MoveAction:
+        if drag.exec_(Qt.MoveAction|Qt.CopyAction, Qt.CopyAction) == Qt.MoveAction:
             self.takeItem(self.row(item))
-
-    def copy(self):
-        self.action = Qt.CopyAction 
-
-    def move(self):
-        self.action = Qt.MoveAction
 
 class DnDWidget(QWidget):
     
