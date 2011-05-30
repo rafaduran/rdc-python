@@ -7,7 +7,7 @@ Counters exercise from 'Rapid GUI Programming with Python and Qt' chapter 11
 import sys
 
 from PyQt4.QtGui import (QWidget, QApplication, QPainter, QBrush, QSizePolicy,
-    QRegion, QPaintEvent)
+    QPen)
 from PyQt4 import QtCore
 from PyQt4.QtCore import QSize
 
@@ -34,18 +34,12 @@ class Counters(QWidget):
             parent widget/window, default=None
         """
         super(Counters, self).__init__(parent)
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, #pylint:disable=C0103
-                QSizePolicy.Preferred) #pylint:disable=C0103
-        sizePolicy.setHeightForWidth(True)
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, #pylint:disable=C0103
+                QSizePolicy.Expanding) #pylint:disable=C0103
         self.setSizePolicy(sizePolicy) #pylint:disable=C0103
         self.points = None
+        self.current = 0
         self.square_states = [0 for _ in range(9)]
-
-    def heightForWidth(self, width): #pylint:disable=C0103,R0201
-        """
-        heightForWidth(self, width)
-        """
-        return width * 1
 
     def sizeHint(self): #pylint:disable=C0103,R0201
         """
@@ -73,7 +67,6 @@ class Counters(QWidget):
         paintEvent(self):   We set here how Counters widget will be painted
                             each time is needed
         """
-        print self.height(), self.width()
         logical_size = self.height() / 3
 
         def logicalfromphysical(length, side):
@@ -82,12 +75,11 @@ class Counters(QWidget):
                                                 physical to logical coordenates
             """
             return (length / side) * logical_size
-        print logicalfromphysical(600, 400)
 
-        self.painter = QPainter(self)
-        self.painter.setPen(QtCore.Qt.SolidLine)
-        self.painter.setRenderHint(QPainter.Antialiasing)
-        self.painter.fillRect(event.rect(), QBrush(QtCore.Qt.white))
+        painter = QPainter(self)
+        painter.setPen(QtCore.Qt.SolidLine)
+        painter.setRenderHint(QPainter.Antialiasing)
+        painter.fillRect(event.rect(), QBrush(QtCore.Qt.white))
 
 
         self.points = [(x, y) for x in range(0 , 3 * logical_size +\
@@ -95,24 +87,31 @@ class Counters(QWidget):
             logical_size + logical_size , logical_size)]
 
         for index in range(4):
-            self.painter.drawLine(self.points[index][0], self.points[index][1],
+            painter.drawLine(self.points[index][0], self.points[index][1],
                     self.points[index +12][0], self.points[index + 12][1])
-            self.painter.drawLine(self.points[index * 4][0], self.points[index *
+            painter.drawLine(self.points[index * 4][0], self.points[index *
                 4][1], self.points[4* index + 3][0], self.points[4 *\
                 index + 3][1])
 
         square_to_point = {0: 0, 1: 4, 2: 8, 3: 1, 4: 5, 5: 9, 6: 2, 7: 6, 8:
                 10 }
 
-        for index,state in enumerate(self.square_states):
+
+        for index, state in enumerate(self.square_states):
             if(state == 1):
-                self.painter.setBrush(QtCore.Qt.red)
-                self.painter.drawEllipse(self.points[square_to_point[index]][0],
+                painter.setBrush(QtCore.Qt.red)
+                painter.drawEllipse(self.points[square_to_point[index]][0],
                         self.points[square_to_point[index]][1], 200,200)
             if(state == 2):
-                self.painter.setBrush(QtCore.Qt.yellow)
-                self.painter.drawEllipse(self.points[square_to_point[index]][0],
+                painter.setBrush(QtCore.Qt.yellow)
+                painter.drawEllipse(self.points[square_to_point[index]][0],
                         self.points[square_to_point[index]][1], 200,200)
+
+        painter.setBrush(QtCore.Qt.NoBrush)
+        painter.setPen(QPen(QBrush(QtCore.Qt.SolidPattern), 4.0,
+            QtCore.Qt.SolidLine))
+        painter.drawRect(self.points[square_to_point[self.current]][0],
+            self.points[square_to_point[self.current]][1], 200,200)
 
 
     def mousePressEvent(self, event=None): #pylint:disable=C0103
@@ -123,21 +122,44 @@ class Counters(QWidget):
             object reference
 
         event:
-            event triggering the mousePressEvent
+            event triggerid
         """
         if event.button() == QtCore.Qt.LeftButton:
             xpos = event.pos().x()
             ypos = event.pos().y()
             square = self.coord_to_square(xpos, ypos)
-            print square
             self.square_states[square] = (self.square_states[square] + 1) % 3
-            print self.square_states[square]
-            #self.paintEvent(QPaintEvent(QRegion(0, 0, self.height(),
-            #    self.width())))
+            self.current = square
             self.update()
             event.accept()
         else:
             event.ignore()
+
+    def keyPressEvent(self, event): #pylint:disable=C0103
+        """
+        keyPressEvent(self, event)
+
+        self:
+            object reference
+
+        event:
+            event triggered
+        """
+        if event.key() == QtCore.Qt.Key_Right and self.current not in [2, 5, 8]:
+            self.current = self.current + 1
+        elif event.key() == QtCore.Qt.Key_Left and self.current not in [0, 3,
+                6]:
+            self.current = self.current - 1
+        elif event.key() == QtCore.Qt.Key_Up and self.current not in [0, 1, 2]:
+            self.current = self.current - 3
+        elif event.key() == QtCore.Qt.Key_Down and self.current not in [6, 7, 
+                8]:
+            self.current = self.current + 3
+        elif event.key() == QtCore.Qt.Key_Space:
+            self.square_states[self.current] = \
+                (self.square_states[self.current] + 1) % 3
+
+        self.update()
 
     def coord_to_square(self, xpos, ypos):
         """
