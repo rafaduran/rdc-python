@@ -30,7 +30,7 @@ class Squares(object):
         ny:
             y partitions (row number)
         """
-        self._square_states = [[0,] * xsize for _y in range(ysize)]
+        self._square_state = [[0,] * xsize for _y in range(ysize)]
         self._current = (0, 0)
         self._xsize = xsize / nx
         self._ysize = ysize / ny
@@ -51,7 +51,45 @@ class Squares(object):
         current(self, pos)
 
         pos:
-            (x,y) should be coordenates tuple, used to set the current square
+            should be (x,y) coordenates tuple, used to set the current square
+        """
+        self._current = self.index_of(pos)
+
+    @property
+    def square_state(self):
+        """
+        square_state(self) return int: represents square state of current
+        square
+        """
+        return self._square_state[self._current[0]][self._current[1]]
+
+    @square_state.setter
+    def square_state(self, value):
+        """
+        square_state(self, value)
+            
+            We change state to value for current square.
+        """
+        if value > 2 or value < 0:
+            raise ValueError("States values can be only 0, 1 or 2")
+        self._square_state[self.current[0]][self._current[1]] = value
+
+    def next_state(self):
+        """
+        next_state(self)
+
+            Current square changes state to the next
+        """
+        self._square_state[self._current[0]][self._current[1]] =\
+        (self._square_state[self._current[0]][self._current[1]] + 1) % 3
+        
+    def index_of(self, pos):
+        """
+        index_of(self, pos)
+
+        pos:
+            should be (x,y) coordenates tuple, used for looking for matching
+            square
         """
         if isinstance(pos, tuple) and len(pos) == 2 and \
         isinstance(pos[0],int) and isinstance(pos[1], int):
@@ -59,27 +97,32 @@ class Squares(object):
             for xindex in range(self._nx):
                 for yindex in range(self._ny):
                     if pos[0] > xindex * self._xsize and pos[0] <\
-                    (xindex+1) * self._xsize:
+                   (xindex+1) * self._xsize:
                         xcurrent = xindex
                     if yindex * self._ysize <= pos[1] and (yindex+1) *\
                     self._ysize > pos[1]:
                         ycurrent = yindex
             if xcurrent is not None and ycurrent is not None:
-                self._current = (xcurrent, ycurrent)
+                return (xcurrent, ycurrent)
             else:
                 raise ValueError
         else:
-                raise TypeError
+            raise TypeError
+
     def __iter__(self):
         """
         __iter__(Self) return tuple's list: ((x,y), state)
             (x, y) square vortix coordinates
             state: square state
         """
+        old_current = self._current
+        self._current = 0
         for xindex in range(self._nx):
-            for yindex in range(self._n):
-                yield ((xindex * self._xsize, yindex * self._ysize),
-                    self._square_states[xindex][yindex])
+            for yindex in range(self._ny):
+                yield (xindex * self._xsize, yindex * self._ysize)
+                self._current = self._current + 1
+        else:
+            self._current = old_current
 
 class Counters(QWidget):
     """
@@ -264,6 +307,15 @@ def test_square():
     print square.current
     for sq in square:
         print sq
+    print square.current
+    
+    print square.square_state
+    square.square_state = 1
+    print square.square_state
+    square.next_state()
+    print square.square_state
+    square.next_state()
+    print square.square_state
 
 if __name__ == '__main__':
     test_square()
