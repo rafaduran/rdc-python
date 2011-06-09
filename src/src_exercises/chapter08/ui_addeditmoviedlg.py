@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/rdc/workspace/rdc-pyqt/src/src_exercises/chap08/addeditmoviedlg.ui'
+# Form implementation generated from reading ui file '/home/rdc/workspace/rdc-pyqt/src/src_exercises/chapter08/addeditmoviedlg.ui'
 #
-# Created: Mon May 16 21:24:51 2011
+# Created: Thu Jun  9 20:33:51 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!

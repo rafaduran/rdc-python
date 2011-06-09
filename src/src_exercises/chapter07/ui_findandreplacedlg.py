@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'src/Exercises/chapter07/findandreplacedlg.ui'
+# Form implementation generated from reading ui file '/home/rdc/workspace/rdc-pyqt/src/src_exercises/chapter07/findandreplacedlg.ui'
 #
-# Created: Sun Apr 10 10:56:53 2011
+# Created: Thu Jun  9 20:33:49 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!

@@ -2,7 +2,7 @@
 
 # Resource object code
 #
-# Created: jue mar 24 21:40:23 2011
+# Created: jue jun 9 20:33:47 2011
 #      by: The Resource Compiler for PyQt (Qt v4.7.0)
 #
 # WARNING! All changes made in this file will be lost!

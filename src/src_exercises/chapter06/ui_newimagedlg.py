@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/rdc/workspace/rdc-pyqt/src/Exercises/chapter06/newimagedlg.ui'
+# Form implementation generated from reading ui file '/home/rdc/workspace/rdc-pyqt/src/src_exercises/chapter06/newimagedlg.ui'
 #
-# Created: Thu Mar 24 21:40:22 2011
+# Created: Thu Jun  9 20:33:47 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!

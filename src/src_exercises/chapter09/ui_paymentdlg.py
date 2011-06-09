@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/rdc/workspace/rdc-pyqt/src/src_exercises/chap09/paymentdlg.ui'
+# Form implementation generated from reading ui file '/home/rdc/workspace/rdc-pyqt/src/src_exercises/chapter09/paymentdlg.ui'
 #
-# Created: Sun May 22 19:45:56 2011
+# Created: Thu Jun  9 20:33:52 2011
 #      by: PyQt4 UI code generator 4.7.4
 #
 # WARNING! All changes made in this file will be lost!
