@@ -17,7 +17,7 @@ from future_builtins import *
 import os
 import sys
 from PyQt4.QtCore import (QEvent, QFile, QFileInfo, QIODevice, QRegExp,
-        QTextStream, Qt, SIGNAL)
+        QTextStream, Qt, SIGNAL, QString)
 from PyQt4.QtGui import (QAction, QApplication, QColor, QFileDialog,
         QFont, QIcon, QKeySequence, QMainWindow, QMessageBox,
         QSyntaxHighlighter, QTextCharFormat, QTextEdit, QTextCursor)
@@ -110,27 +110,35 @@ class TextEdit(QTextEdit):
     def indent(self):
         """
         indent(self)
-        indent selected line
+            indent current line
         """
-        cursor = self.cursorForPosition(self.pos())
+        cursor = self.textCursor()
         cursor.beginEditBlock()
-        cursor.movePosition(QTextCursor.Start)
-        cursor.insertText("    ")
+        pos = cursor.position()
+        cursor.select(QTextCursor.LineUnderCursor)
+        cursor.insertText("    " + cursor.selectedText())
+        cursor.setPosition(pos + 4)
         cursor.endEditBlock()
+        self.setTextCursor(cursor)
 
     def unindent(self):
         """
         unindent(self)
-        indent selected line
+            unindent current line
         """
-        cursor = self.cursorForPosition(self.pos())
+        cursor = self.textCursor()
         cursor.beginEditBlock()
+        pos = cursor.position()
         cursor.select(QTextCursor.LineUnderCursor)
-        text = cursor.selectedText()
-        if text[:4] == '    ':
-            cursor.movePosition(QTextCursor.Start)
+        if cursor.selectedText().startsWith("   "):
+            cursor.movePosition(QTextCursor.StartOfLine)
             [cursor.deleteChar() for _ in range(4)]
+            pos = pos -4
+        else:
+                cursor.clearSelection()
+        cursor.setPosition(pos)
         cursor.endEditBlock()
+        self.setTextCursor(cursor)
 
 
 class MainWindow(QMainWindow):
