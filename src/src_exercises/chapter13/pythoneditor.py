@@ -17,7 +17,7 @@ from future_builtins import *
 import os
 import sys
 from PyQt4.QtCore import (QEvent, QFile, QFileInfo, QIODevice, QRegExp,
-        QTextStream, Qt, SIGNAL, QString)
+        QTextStream, Qt, SIGNAL)
 from PyQt4.QtGui import (QAction, QApplication, QColor, QFileDialog,
         QFont, QIcon, QKeySequence, QMainWindow, QMessageBox,
         QSyntaxHighlighter, QTextCharFormat, QTextEdit, QTextCursor)
@@ -107,39 +107,40 @@ class TextEdit(QTextEdit):
             return True
         return QTextEdit.event(self, event)
 
-    def indent(self):
+    def indent_selection(self):
         """
-        indent(self)
-            indent current line
-        """
-        cursor = self.textCursor()
-        cursor.beginEditBlock()
-        pos = cursor.position()
-        cursor.select(QTextCursor.LineUnderCursor)
-        cursor.insertText("    " + cursor.selectedText())
-        cursor.setPosition(pos + 4)
-        cursor.endEditBlock()
-        self.setTextCursor(cursor)
-
-    def unindent(self):
-        """
-        unindent(self)
-            unindent current line
+        indent_selection(self)
+            indent current selection if any or current line 
         """
         cursor = self.textCursor()
         cursor.beginEditBlock()
-        pos = cursor.position()
-        cursor.select(QTextCursor.LineUnderCursor)
-        if cursor.selectedText().startsWith("   "):
-            cursor.movePosition(QTextCursor.StartOfLine)
-            [cursor.deleteChar() for _ in range(4)]
-            pos = pos -4
-        else:
-                cursor.clearSelection()
-        cursor.setPosition(pos)
+        start = cursor.selectionStart()
+        end = cursor.selectionEnd()
+        cursor.setPosition(start)
+        cursor.movePosition(QTextCursor.StartOfLine)
+        while cursor.position() <= end:
+            cursor.insertText("    ")
+            cursor.movePosition(QTextCursor.Down)
         cursor.endEditBlock()
-        self.setTextCursor(cursor)
 
+    def unindent_selection(self):
+        """
+        indent_selection(self)
+            indent current selection if any or current line 
+        """
+        cursor = self.textCursor()
+        cursor.beginEditBlock()
+        start = cursor.selectionStart()
+        end = cursor.selectionEnd()
+        cursor.setPosition(start)
+        cursor.movePosition(QTextCursor.StartOfLine)
+        while cursor.position() <= end:
+            cursor.select(QTextCursor.LineUnderCursor)
+            if cursor.selectedText().startsWith('   '):
+                cursor.movePosition(QTextCursor.StartOfLine)
+                [cursor.deleteChar() for _ in range(4)] 
+            cursor.movePosition(QTextCursor.Down)
+        cursor.endEditBlock()
 
 class MainWindow(QMainWindow):
 
@@ -179,10 +180,10 @@ class MainWindow(QMainWindow):
                 self.editor.paste, QKeySequence.Paste, "editpaste",
                 "Paste in the clipboard's text")
         self.indent_action = self.createAction("&Indent",
-                self.editor.indent, "Ctrl-[", "editindent",
+                self.editor.indent_selection, "Ctrl+]", "editindent",
                 "Indent selected line")
         self.unindent_action = self.createAction("&Unindent",
-                self.editor.unindent, "Ctrl-]", "editunindent",
+                self.editor.unindent_selection, "Ctrl+[", "editunindent",
                 "Unindent selected line")
 
         fileMenu = self.menuBar().addMenu("&File")
@@ -221,18 +222,14 @@ class MainWindow(QMainWindow):
     def updateUi(self, arg=None):
         self.fileSaveAction.setEnabled(
                 self.editor.document().isModified())
-        self.fileSaveAsAction.setEnabled(
-                not self.editor.document().isEmpty())
+        enable = not self.editor.document().isEmpty()
+        self.fileSaveAsAction.setEnabled(enable)
+        self.indent_action.setEnabled(enable)
+        self.unindent_action.setEnabled(enable)
         enable = self.editor.textCursor().hasSelection()
         self.editCopyAction.setEnabled(enable)
         self.editCutAction.setEnabled(enable)
         self.editPasteAction.setEnabled(self.editor.canPaste())
-        if(self.editor.toPlainText()):
-            enable = True
-        else:
-            enable = False
-        self.indent_action.setEnabled(enable)
-        self.unindent_action.setEnabled(enable)
 
 
     def createAction(self, text, slot=None, shortcut=None, icon=None,
