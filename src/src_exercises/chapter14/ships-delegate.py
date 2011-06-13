@@ -18,7 +18,7 @@ import sys
 from PyQt4.QtCore import (QFile, QString, QTimer, Qt, SIGNAL)
 from PyQt4.QtGui import (QApplication, QDialog, QHBoxLayout, QLabel,
         QMessageBox, QPushButton, QSplitter, QTableView, QVBoxLayout,
-        QWidget)
+        QWidget, QFileDialog)
 import ships
 
 MAC = True
@@ -47,15 +47,18 @@ class MainForm(QDialog):
 
         addShipButton = QPushButton("&Add Ship")
         removeShipButton = QPushButton("&Remove Ship")
+        export_button = QPushButton("E&xport...")
         quitButton = QPushButton("&Quit")
         if not MAC:
             addShipButton.setFocusPolicy(Qt.NoFocus)
             removeShipButton.setFocusPolicy(Qt.NoFocus)
+            export_button.setFocusPolicy(Qt.NoFocus)
             quitButton.setFocusPolicy(Qt.NoFocus)
 
         buttonLayout = QHBoxLayout()
         buttonLayout.addWidget(addShipButton)
         buttonLayout.addWidget(removeShipButton)
+        buttonLayout.addWidget(export_button)
         buttonLayout.addStretch()
         buttonLayout.addWidget(quitButton)
         splitter = QSplitter(Qt.Horizontal)
@@ -83,6 +86,8 @@ class MainForm(QDialog):
         self.connect(addShipButton, SIGNAL("clicked()"), self.addShip)
         self.connect(removeShipButton, SIGNAL("clicked()"),
                      self.removeShip)
+        self.connect(export_button, SIGNAL("clicked()"),
+                     self.export)
         self.connect(quitButton, SIGNAL("clicked()"), self.accept)
 
         self.setWindowTitle("Ships (delegate)")
@@ -174,7 +179,19 @@ class MainForm(QDialog):
             return
         self.model.removeRows(row)
         self.resizeColumns()
-
+    
+    def export(self):
+        """
+        export(self): popups a QFileDialog asking for a file to export data as
+            plain txt
+        """
+        filename = "."
+        filename = QFileDialog.getSaveFileName(self,
+                "Ships choose export file", filename,
+                "Export files(*.txt)")
+        if not filename.isEmpty():
+            self.model.export(filename)
+        return False
 
 app = QApplication(sys.argv)
 form = MainForm()

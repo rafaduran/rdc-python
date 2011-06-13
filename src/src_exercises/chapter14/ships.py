@@ -17,7 +17,7 @@ from future_builtins import *
 import platform
 from PyQt4.QtCore import (QAbstractTableModel, QDataStream, QFile,
         QIODevice, QModelIndex, QRegExp, QSize, QString, QVariant, Qt,
-        SIGNAL)
+        SIGNAL, QTextStream)
 from PyQt4.QtGui import (QApplication, QColor, QComboBox, QLineEdit,
         QSpinBox, QStyle, QStyledItemDelegate, QTextDocument, QTextEdit)
 import richtextlineedit
@@ -241,6 +241,17 @@ class ShipTableModel(QAbstractTableModel):
                 return QVariant(QColor(230, 250, 250))
             else:
                 return QVariant(QColor(210, 230, 230))
+        elif role == Qt.ToolTipRole:
+            if column == NAME:
+                return ship.name + "\n(Minimun lenght 3)"
+            elif column == OWNER:
+                return ship.owner + "\n(Minimun lenght 3)"
+            elif column == COUNTRY:
+                return ship.country + "\n(Minimun lenght 3)"
+            elif column == DESCRIPTION:
+                return ship.description
+            elif column == TEU:
+                return QString(unicode(ship.teu)) + " twenty foot equivalents"
         return QVariant()
 
 
@@ -379,6 +390,34 @@ class ShipTableModel(QAbstractTableModel):
             if exception is not None:
                 raise exception
 
+    def export(self, filename):
+        """
+        export(self, filename): exports ships data as txt file
+        """
+        if filename is None:
+            raise ValueError("Invalid filename")
+        fh = None
+        try:
+            fh = QFile(filename)
+            if not fh.open(QIODevice.WriteOnly):
+                raise IOError, unicode(fh.errorString())
+            stream = QTextStream(fh)
+            stream.setCodec('UTF-8')
+            for ship in self.ships:
+                stream << ship.name << "|"
+            #stream = QTextStream(fh)
+            #stream.setCodec("UTF-8")
+            #stream << self.editor.toPlainText()
+            #self.editor.document().setModified(False)
+        except (IOError, OSError), e:
+            QMessageBox.warning(self, "Chips-delegate -- Save Error",
+                    "Failed to save {0}: {1}".format(filename, e))
+            return False
+        finally:
+            if fh is not None:
+                fh.close()
+        return True
+
 
 class ShipDelegate(QStyledItemDelegate):
 
@@ -485,9 +524,11 @@ class ShipDelegate(QStyledItemDelegate):
         if index.column() == TEU:
             model.setData(index, QVariant(editor.value()))
         elif index.column() in (OWNER, COUNTRY):
-            model.setData(index, QVariant(editor.currentText()))
+            if len(editor.currentText()) >= 3:
+                model.setData(index, QVariant(editor.currentText()))
         elif index.column() == NAME:
-            model.setData(index, QVariant(editor.text()))
+            if len(editor.text()) >= 3:
+                model.setData(index, QVariant(editor.text()))
         elif index.column() == DESCRIPTION:
             model.setData(index, QVariant(editor.toSimpleHtml()))
         else:
