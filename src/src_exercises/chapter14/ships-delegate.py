@@ -190,7 +190,15 @@ class MainForm(QDialog):
                 "Ships choose export file", filename,
                 "Export files(*.txt)")
         if not filename.isEmpty():
-            self.model.export(filename)
+            succes, error = self.model.export(filename)
+
+            if succes:
+                QMessageBox.information(self, "Chips-delegate -- Export Succes",
+                        "Exported!!!!")
+                return True
+            else:
+                QMessageBox.warning(self, "Chips-delegate -- Export Error",
+                        "Failed to save {0}: {1}".format(filename, error))
         return False
 
 app = QApplication(sys.argv)

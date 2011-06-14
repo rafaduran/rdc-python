@@ -404,19 +404,17 @@ class ShipTableModel(QAbstractTableModel):
             stream = QTextStream(fh)
             stream.setCodec('UTF-8')
             for ship in self.ships:
-                stream << ship.name << "|"
-            #stream = QTextStream(fh)
-            #stream.setCodec("UTF-8")
-            #stream << self.editor.toPlainText()
-            #self.editor.document().setModified(False)
+                stream << ship.name << "|" << ship.owner << "|" << \
+                    ship.country << "|" << ship.teu << "|"
+                temp = QString(ship.description)
+                temp.remove(QRegExp("<[^>]*>"))
+                stream << temp << "\n"
         except (IOError, OSError), e:
-            QMessageBox.warning(self, "Chips-delegate -- Save Error",
-                    "Failed to save {0}: {1}".format(filename, e))
-            return False
+            return (False, e)
         finally:
             if fh is not None:
                 fh.close()
-        return True
+        return (True, None)
 
 
 class ShipDelegate(QStyledItemDelegate):
