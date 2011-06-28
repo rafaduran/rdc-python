@@ -21,6 +21,8 @@ from PyQt4.QtCore import (QVariant, Qt, QAbstractListModel, QModelIndex,
         QSize, SIGNAL, QString)
 from PyQt4.QtGui import (QApplication, QHBoxLayout, QDialog, QListView, QFontMetrics,
         QWidget, QPixmap, QPainter, QColor)
+
+from genericdelegates import IntegerColumnDelegate
 class BarGraphModel(QAbstractListModel):
         """
         Custom model for chapter 16 exercise
@@ -43,27 +45,15 @@ class BarGraphModel(QAbstractListModel):
             rowCount(self, index=QModelIndex())
             """
             return len(self.values)
-
-        def data(self, index, role=Qt.DisplayRole):
+        
+        def flags(self, index):
             """
-            data(self, index role)
+            flags(self, index)
+                Add ItemIsEditable flag
             """
-            if not index.isValid() or not (0 <= index.row() < len(self.values)):
-                return QVariant()
-            value = ascii(self.values[index.row()])
-            color = self.colors[index.row() + 1]
-            if role == Qt.DisplayRole:
-                return QVariant(QString(value))
-            elif role == Qt.TextAlignmentRole:
-                return QVariant(int(Qt.AlignRight))
-            elif role == Qt.UserRole:
-                return QVariant(QColor(color))
-            elif role == Qt.DecorationRole:
-                pixmap = QPixmap(20,20)
-                pixmap.fill(color)
-                return QVariant(pixmap)
-            else:
-                QVariant()
+            flag = QAbstractListModel.flags(self, index)
+            flag |= Qt.ItemIsEditable
+            return flag
 
         def setData(self, index, value, role=Qt.EditRole):
             """
@@ -76,50 +66,26 @@ class BarGraphModel(QAbstractListModel):
                 return True
             return False
 
-        def flags(self, index):
+        def data(self, index, role=Qt.DisplayRole):
             """
-            flags(self, index)
-                Add ItemIsEditable flag
+            data(self, index role)
             """
-            flag = QAbstractListModel.flags(self, index)
-            flag |= Qt.ItemIsEditable
-            return flag
-
-
-from genericdelegates import IntegerColumnDelegate
-
-class MainForm(QDialog):
-    def __init__(self, parent=None):
-        """
-        __init__(self, parent=None)
-        """
-        super(MainForm, self).__init__(parent)
-        self.model = BarGraphModel()
-        self.barGraphView = BarGraphView()
-        self.barGraphView.setModel(self.model)
-        self.listView = QListView()
-        self.listView.setModel(self.model)
-        self.listView.setItemDelegate(IntegerColumnDelegate(0, 1000, self))
-        self.listView.setMaximumWidth(100)
-        self.listView.setEditTriggers(QListView.DoubleClicked|QListView.EditKeyPressed)
-        layout = QHBoxLayout()
-        layout.addWidget(self.listView)
-        layout.addWidget(self.barGraphView, 1)
-        self.setLayout(layout)
-        self.setWindowTitle("Bar Grapher")
-
-                
-class BarGraphDelegate(IntegerColumnDelegate):
-    """
-    Custom item delegate for chapter 16 exercise
-    """
-    def __init__(self, minv, maxv, parent=None):
-        """
-        __init__(self, min, max, parent=None)
-            minv: Minimun value allowed
-            maxv: Maximun value allowd
-        """
-        super(BarGraphDelegate, self).__init__(minv, maxv, parent)
+            if not index.isValid() or not (0 <= index.row() < len(self.values)):
+                return QVariant()
+            value = ascii(self.values[index.row()])
+            color = self.colors.get(index.row() + 1, Qt.red)
+            if role == Qt.DisplayRole:
+                return QVariant(value)
+            elif role == Qt.TextAlignmentRole:
+                return QVariant(int(Qt.AlignRight))
+            elif role == Qt.UserRole:
+                return QVariant(QColor(color))
+            elif role == Qt.DecorationRole:
+                pixmap = QPixmap(20,20)
+                pixmap.fill(color)
+                return QVariant(pixmap)
+            else:
+                return QVariant()
 
 class BarGraphView(QWidget):
     """
@@ -130,7 +96,7 @@ class BarGraphView(QWidget):
         __init__(self, parent=None)
         """
         super(BarGraphView, self).__init__(parent)
-        self.model = BarGraphModel()
+        self.model = None
 
     def setModel(self, model):
         """
@@ -160,8 +126,7 @@ class BarGraphView(QWidget):
         """
         minimunSizeHint(self)
         """
-        fm = QFontMetrics(self.font())
-        return QSize(fm.width("1000") + 20, 20 * 4)
+        return QSize(200, 100)
 
     def sizeHint(self):
         """
@@ -177,7 +142,6 @@ class BarGraphView(QWidget):
             return
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
-        painter.setRenderHint(QPainter.TextAntialiasing)
         x = 0
         xsize = self.width() / self.model.rowCount()
         height = self.height()
@@ -189,11 +153,28 @@ class BarGraphView(QWidget):
             value = (self.model.data(self.model.index(row))).toInt()[0]
             ysize = value * height / maxy
             variant = self.model.data(self.model.index(row),Qt.UserRole)
-            variant.convert(QVariant.Color)
-            painter.setBrush(QColor(variant))
-            painter.drawRect(x, height - ysize, xsize, ysize)
+            painter.fillRect(x, height - ysize, xsize, ysize,QColor(variant))
             x = x + xsize
 
+class MainForm(QDialog):
+    def __init__(self, parent=None):
+        """
+        __init__(self, parent=None)
+        """
+        super(MainForm, self).__init__(parent)
+        self.model = BarGraphModel()
+        self.barGraphView = BarGraphView()
+        self.barGraphView.setModel(self.model)
+        self.listView = QListView()
+        self.listView.setModel(self.model)
+        self.listView.setItemDelegate(IntegerColumnDelegate(0, 1000, self))
+        self.listView.setMaximumWidth(100)
+        self.listView.setEditTriggers(QListView.DoubleClicked|QListView.EditKeyPressed)
+        layout = QHBoxLayout()
+        layout.addWidget(self.listView)
+        layout.addWidget(self.barGraphView, 1)
+        self.setLayout(layout)
+        self.setWindowTitle("Bar Grapher")
 
 def fake_random_data():
     """
