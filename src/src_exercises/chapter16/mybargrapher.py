@@ -18,74 +18,74 @@ from future_builtins import *
 import random
 import sys
 from PyQt4.QtCore import (QVariant, Qt, QAbstractListModel, QModelIndex,
-        QSize, SIGNAL, QString)
-from PyQt4.QtGui import (QApplication, QHBoxLayout, QDialog, QListView, QFontMetrics,
-        QWidget, QPixmap, QPainter, QColor)
+        QSize, SIGNAL)
+from PyQt4.QtGui import (QApplication, QHBoxLayout, QDialog, QListView, QWidget,
+        QPixmap, QPainter, QColor)
 
 from genericdelegates import IntegerColumnDelegate
 class BarGraphModel(QAbstractListModel):
+    """
+    Custom model for chapter 16 exercise
+    """
+    def __init__(self, values=[], colors={}): #pylint:disable=W0102
         """
-        Custom model for chapter 16 exercise
+        __init__(self, parent=None)
         """
-        def __init__(self, values=[], colors={}):
-            """
-            __init__(self, parent=None)
-            """
-            super(BarGraphModel, self).__init__()
-            self.values = values
-            self.colors = colors
-            if len(values) != len(colors):
-                raise AttributeError("""values and colors must have the same
-                        length""")
-            elif len(values) == 0:
-                self.values, self.colors = fake_random_data() 
+        super(BarGraphModel, self).__init__()
+        self.values = values
+        self.colors = colors
+        if len(values) != len(colors):
+            raise AttributeError("""values and colors must have the same
+                    length""")
+        elif len(values) == 0:
+            self.values, self.colors = fake_random_data() 
 
-        def rowCount(self, index=QModelIndex()):
-            """
-            rowCount(self, index=QModelIndex())
-            """
-            return len(self.values)
+    def rowCount(self, index=QModelIndex()):
+        """
+        rowCount(self, index=QModelIndex())
+        """
+        return len(self.values)
         
-        def flags(self, index):
-            """
-            flags(self, index)
-                Add ItemIsEditable flag
-            """
-            flag = QAbstractListModel.flags(self, index)
-            flag |= Qt.ItemIsEditable
-            return flag
+    def flags(self, index):
+        """
+        flags(self, index)
+            Add ItemIsEditable flag
+        """
+        flag = QAbstractListModel.flags(self, index)
+        flag |= Qt.ItemIsEditable
+        return flag
 
-        def setData(self, index, value, role=Qt.EditRole):
-            """
-            setData(self, index, value, role=Qt.EditRole)
-            """
-            if index.isValid() and role == Qt.EditRole:
-                self.values[index.row()] = value.toInt()[0]
-                self.emit(SIGNAL("dataChanged(QModelIndex, QModelIndex)"), index,
-                    index)
-                return True
-            return False
+    def setData(self, index, value, role=Qt.EditRole):
+        """
+        setData(self, index, value, role=Qt.EditRole)
+        """
+        if index.isValid() and role == Qt.EditRole:
+            self.values[index.row()] = value.toInt()[0]
+            self.emit(SIGNAL("dataChanged(QModelIndex, QModelIndex)"), index,
+                index)
+            return True
+        return False
 
-        def data(self, index, role=Qt.DisplayRole):
-            """
-            data(self, index role)
-            """
-            if not index.isValid() or not (0 <= index.row() < len(self.values)):
-                return QVariant()
-            value = ascii(self.values[index.row()])
-            color = self.colors.get(index.row() + 1, Qt.red)
-            if role == Qt.DisplayRole:
-                return QVariant(value)
-            elif role == Qt.TextAlignmentRole:
-                return QVariant(int(Qt.AlignRight))
-            elif role == Qt.UserRole:
-                return QVariant(QColor(color))
-            elif role == Qt.DecorationRole:
-                pixmap = QPixmap(20,20)
-                pixmap.fill(color)
-                return QVariant(pixmap)
-            else:
-                return QVariant()
+    def data(self, index, role=Qt.DisplayRole):
+        """
+        data(self, index role)
+        """
+        if not index.isValid() or not (0 <= index.row() < len(self.values)):
+            return QVariant()
+        value = ascii(self.values[index.row()])
+        color = self.colors.get(index.row() + 1, Qt.red)
+        if role == Qt.DisplayRole:
+            return QVariant(value)
+        elif role == Qt.TextAlignmentRole:
+            return QVariant(int(Qt.AlignRight))
+        elif role == Qt.UserRole:
+            return QVariant(QColor(color))
+        elif role == Qt.DecorationRole:
+            pixmap = QPixmap(20, 20)
+            pixmap.fill(color)
+            return QVariant(pixmap)
+        else:
+            return QVariant()
 
 class BarGraphView(QWidget):
     """
@@ -152,11 +152,14 @@ class BarGraphView(QWidget):
         for row in range(self.model.rowCount()):
             value = (self.model.data(self.model.index(row))).toInt()[0]
             ysize = value * height / maxy
-            variant = self.model.data(self.model.index(row),Qt.UserRole)
-            painter.fillRect(x, height - ysize, xsize, ysize,QColor(variant))
+            variant = self.model.data(self.model.index(row), Qt.UserRole)
+            painter.fillRect(x, height - ysize, xsize, ysize, QColor(variant))
             x = x + xsize
 
 class MainForm(QDialog):
+    """
+    Dummy MainForm for BarGraph testing
+    """
     def __init__(self, parent=None):
         """
         __init__(self, parent=None)
@@ -169,7 +172,8 @@ class MainForm(QDialog):
         self.listView.setModel(self.model)
         self.listView.setItemDelegate(IntegerColumnDelegate(0, 1000, self))
         self.listView.setMaximumWidth(100)
-        self.listView.setEditTriggers(QListView.DoubleClicked|QListView.EditKeyPressed)
+        self.listView.setEditTriggers(QListView.DoubleClicked|\
+                QListView.EditKeyPressed)
         layout = QHBoxLayout()
         layout.addWidget(self.listView)
         layout.addWidget(self.barGraphView, 1)
