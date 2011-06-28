@@ -159,10 +159,16 @@ class WaterQualityView(QWidget):
     def setModel(self, model):
         self.model = model
         self.connect(self.model,
-                SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                self.update)
-        self.connect(self.model, SIGNAL("modelReset()"), self.update)
+            SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+            self.setNewSize)
+        self.connect(self.model, SIGNAL("modelReset()"),
+                     self.setNewSize)
+        self.setNewSize()
+
+    def setNewSize(self):
+        self.resize(self.sizeHint())
         self.update()
+        self.updateGeometry()
 
     def minimumSizeHint(self):
         size = self.sizeHint()
