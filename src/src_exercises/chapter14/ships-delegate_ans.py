@@ -209,7 +209,7 @@ class MainForm(QDialog):
                 teu = teu.replace(nonDigits, "").toInt()[0]
                 description = self.model.data(
                         (self.model.index(row, ships.DESCRIPTION))
-                                .toString())
+                                ).toString()
                 description = description.replace(htmlTags, "")
                 stream << name << "|" << owner << "|" << country \
                        << "|" << teu << "|" << description << "\n"
