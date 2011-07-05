@@ -189,7 +189,7 @@ class MainForm(QDialog):
         filename = "."
         filename = QFileDialog.getSaveFileName(self,
                self.tr("Ships choose export file"), filename,
-                self.tr("Export files(*.txt)"))
+                self.tr("Export files(*.txt)"),options=QFileDialog.DontUseNativeDialog)
         if not filename.isEmpty():
             succes, error = self.model.export(filename)
 
