@@ -105,9 +105,6 @@ class Socket(QTcpSocket):
             if room in rooms:
                 dates.append(date)
         if len(dates):
-            #result = QString()
-            #[result.append(str(date) + ", ") for date in dates[:-1]]
-            #result.append(str(dates[-1]))
             return QString(', '.join([str(date) for date in dates]))
         else:
             return None
