@@ -60,9 +60,10 @@ class BuildingServicesClient(QWidget):
         self.bookButton = QPushButton("&Book")
         self.bookButton.setEnabled(False)
         self.unBookButton = QPushButton("&Unbook")
+        self.unBookButton.setEnabled(False)
         self.books_date_button = QPushButton("Bookings &on date?")
         self.books_room_button = QPushButton("Bookings &for room?")
-        self.unBookButton.setEnabled(False)
+        self.books_room_button.setEnabled(False)
         quitButton = QPushButton("&Quit")
         if not MAC:
             self.bookButton.setFocusPolicy(Qt.NoFocus)
@@ -116,6 +117,7 @@ class BuildingServicesClient(QWidget):
             enabled = False
         self.bookButton.setEnabled(enabled)
         self.unBookButton.setEnabled(enabled)
+        self.books_room_button.setEnabled(enabled)
 
 
     def closeEvent(self, event):
@@ -127,7 +129,6 @@ class BuildingServicesClient(QWidget):
         self.issueRequest(QString("BOOK"), self.roomEdit.text(),
                           self.dateEdit.date())
 
-
     def unBook(self):
         self.issueRequest(QString("UNBOOK"), self.roomEdit.text(),
                           self.dateEdit.date())
@@ -136,7 +137,8 @@ class BuildingServicesClient(QWidget):
                 self.dateEdit.date())
 
     def books_room(self):
-        pass
+        self.issueRequest(QString("BOOKINGSFORROOM"),self.roomEdit.text(),
+                QString())
 
     def issueRequest(self, action, room, date):
         self.request = QByteArray()
@@ -173,9 +175,12 @@ class BuildingServicesClient(QWidget):
                 break
             action = QString()
             room = QString()
-            date = QDate()
             stream >> action >> room
-            if action != "ERROR":
+            if action not in ("ERROR","BOOKINGSFORROOM"):
+                date = QDate()
+                stream >> date
+            elif action == "BOOKINGSFORROOM":
+                date = QString()
                 stream >> date
             if action == "ERROR":
                 msg = QString("Error: %1").arg(room)
@@ -188,6 +193,9 @@ class BuildingServicesClient(QWidget):
             elif action == "BOOKINGSONDATE":
                 msg = (QString("Rooms booked on %1: %2").\
                     arg(date.toString(Qt.ISODate)).arg(room))
+            elif action == "BOOKINGSFORROOM":
+                msg = QString("Room %1 booked on: %2").\
+                arg(room).arg(date)
             self.responseLabel.setText(msg)
             self.updateUi()
             self.nextBlockSize = 0

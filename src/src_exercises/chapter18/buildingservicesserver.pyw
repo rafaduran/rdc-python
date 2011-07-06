@@ -59,13 +59,13 @@ class Socket(QTcpSocket):
         room = QString()
         date = QDate()
         stream >> action
-        if action in ("BOOK", "UNBOOK"):
+        if action in ("BOOK", "UNBOOK", "BOOKINGSONDATE"):
             stream >> room >> date
             bookings = Bookings.get(date.toPyDate())
             uroom = unicode(room)
-        elif action == "BOOKINGSONDATE":
+        elif action == "BOOKINGSFORROOM":
             stream >> room >> date
-            bookings = Bookings.get(date.toPyDate())
+            dates = self.books_for_room(room)
         if action == "BOOK":
             if bookings is None:
                 bookings = Bookings[date.toPyDate()]
@@ -93,10 +93,29 @@ class Socket(QTcpSocket):
             else:
                 self.sendError("No bookings on {0}".\
                     format(date.toString(Qt.ISODate)))
+        elif action == "BOOKINGSFORROOM":
+            if dates is not None:
+                print("dates:"+dates)
+                self.sendReply(action, room, dates)
+            else:
+                self.sendError("No bookings for room {0}".format(room))
         else:
             self.sendError("Unrecognized request")
         printBookings()
 
+    def books_for_room(self, room):
+        dates = []
+        for date, rooms in Bookings.items():
+            if room in rooms:
+                dates.append(date)
+        if len(dates):
+            result = QString()
+            [result.append(str(date) + ", ") for date in dates[:-1]]
+            result.append(str(dates[-1]))
+            print("result: "+result)
+            return result
+        else:
+            return None
 
     def sendError(self, msg):
         reply = QByteArray()
