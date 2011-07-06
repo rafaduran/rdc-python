@@ -132,6 +132,8 @@ class BuildingServicesClient(QWidget):
     def unBook(self):
         self.issueRequest(QString("UNBOOK"), self.roomEdit.text(),
                           self.dateEdit.date())
+        
+
     def books_date(self):
         self.issueRequest(QString("BOOKINGSONDATE"), QString(),
                 self.dateEdit.date())

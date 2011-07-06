@@ -86,16 +86,12 @@ class Socket(QTcpSocket):
                 self.sendReply(action, room, date)
         elif action == "BOOKINGSONDATE":
             if bookings is not None:
-                string = QString()
-                [string.append(book + ", ") for book in bookings[:-1]]
-                string.append(bookings[-1])
-                self.sendReply(action, string, date)
+                self.sendReply(action, QString(", ".join(bookings)), date)
             else:
                 self.sendError("No bookings on {0}".\
                     format(date.toString(Qt.ISODate)))
         elif action == "BOOKINGSFORROOM":
             if dates is not None:
-                print("dates:"+dates)
                 self.sendReply(action, room, dates)
             else:
                 self.sendError("No bookings for room {0}".format(room))
@@ -109,11 +105,10 @@ class Socket(QTcpSocket):
             if room in rooms:
                 dates.append(date)
         if len(dates):
-            result = QString()
-            [result.append(str(date) + ", ") for date in dates[:-1]]
-            result.append(str(dates[-1]))
-            print("result: "+result)
-            return result
+            #result = QString()
+            #[result.append(str(date) + ", ") for date in dates[:-1]]
+            #result.append(str(dates[-1]))
+            return QString(', '.join([str(date) for date in dates]))
         else:
             return None
 
