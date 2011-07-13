@@ -16,7 +16,9 @@ from future_builtins import *
 
 import collections
 import sys
-from PyQt4.QtCore import (QDir, QReadLocker, QReadWriteLock, Qt, SIGNAL)
+import os
+from PyQt4.QtCore import (QDir, QReadLocker, QReadWriteLock, SIGNAL, QMutex,
+        QMutexLocker, pyqtSlot)
 from PyQt4.QtGui import (QApplication, QDialog, QFileDialog, QFrame,
         QHBoxLayout, QLCDNumber, QLabel, QLineEdit, QListWidget,
         QPushButton, QVBoxLayout)
@@ -31,6 +33,7 @@ class Form(QDialog):
         self.fileCount = 0
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
+        self.mutex = QMutex()
         self.lock = QReadWriteLock()
         self.path = QDir.homePath()
         pathLabel = QLabel("Indexing path:")
@@ -90,19 +93,21 @@ class Form(QDialog):
         layout.addWidget(self.statusLabel)
         self.setLayout(layout)
 
-        self.walker = walker.Walker(self.lock, self)
-        self.connect(self.walker, SIGNAL("indexed(QString)"), self.indexed)
-        self.connect(self.walker, SIGNAL("finished(bool)"), self.finished)
         self.connect(self.pathButton, SIGNAL("clicked()"), self.setPath)
         self.connect(self.findEdit, SIGNAL("returnPressed()"), self.find)
-        self.setWindowTitle("Page Indexer")
+        
+        self.walkers = set()
 
+        self.setWindowTitle("Page Indexer")
+    
 
     def setPath(self):
         self.pathButton.setEnabled(False)
-        if self.walker.isRunning():
-            self.walker.stop()
-            self.walker.wait()
+        with QMutexLocker(self.mutex):
+            for worker in self.walkers:
+                if worker.isRunning():
+                    worker.stop()
+                    worker.wait()
         path = QFileDialog.getExistingDirectory(self,
                     "Choose a Path to Index", self.path)
         if path.isEmpty():
@@ -118,9 +123,32 @@ class Form(QDialog):
         self.fileCount = 0
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
-        self.walker.initialize(unicode(self.path),
-                self.filenamesForWords, self.commonWords)
-        self.walker.start()
+        filenames = []
+        for root, dirs, files in os.walk(unicode(path)):
+            for name in files:
+                filenames.append(os.path.join(root, name))
+                if(len(filenames) == 1000):
+                    self.start_walker(filenames)
+                    filenames = []
+        else:
+            self.start_walker(filenames)
+
+
+    def start_walker(self, filenames):
+        worker = walker.Walker(self.lock, filenames, self.filenamesForWords,
+                self.commonWords, self)
+        worker.start()
+        self.connect(worker, SIGNAL("indexed(QString)"), self.indexed)
+        self.connect(worker, SIGNAL("finished(PyQt_PyObject)"), self.finished)
+        with QMutexLocker(self.mutex):
+            self.walkers.add(worker)
+
+
+    def stop_walkers(self):
+        with QMutexLocker(self.mutex):
+            for worker in self.walkers:
+                worker.stop()
+                worker.wait()
 
 
     def find(self):
@@ -154,8 +182,9 @@ class Form(QDialog):
 
 
     def indexed(self, fname):
-        self.statusLabel.setText(fname)
-        self.fileCount += 1
+        with QMutexLocker(self.mutex):
+            self.statusLabel.setText(fname)
+            self.fileCount += 1
         if self.fileCount % 25 == 0:
             self.filesIndexedLCD.display(self.fileCount)
             with QReadLocker(self.lock):
@@ -170,27 +199,37 @@ class Form(QDialog):
             self.commonWordsListWidget.addItems(sorted(words))
 
 
-    def finished(self, completed):
-        self.statusLabel.setText("Indexing complete"
-                                 if completed else "Stopped")
-        self.finishedIndexing()
+    def finished(self, worker):
+        finished = False
+        with QMutexLocker(self.mutex):
+            self.walkers.remove(worker)
+            if not len(self.walkers):
+                finished = True
+        if finished:
+            self.statusLabel.setText("Indexing complete"
+                                 if worker.completed else "Stopped")
+            self.finishedIndexing()
+        del(worker)
 
 
     def reject(self):
-        if self.walker.isRunning():
-            self.walker.stop()
-            self.finishedIndexing()
-        else:
-            self.accept()
+        with QMutexLockerer(self.mutex):
+            for worker in self.walkers:
+                if worker.isRunning():
+                    worker.stop()
+                self.finished(worker)
+            else:
+                self.accept()
 
 
     def closeEvent(self, event=None):
-        self.walker.stop()
-        self.walker.wait()
+        with QMutexLocker(self.mutex):
+            for worker in self.walkers:
+                worker.stop()
+                worker.wait()
 
 
     def finishedIndexing(self):
-        self.walker.wait()
         self.filesIndexedLCD.display(self.fileCount)
         self.wordsIndexedLCD.display(len(self.filenamesForWords))
         self.commonWordsLCD.display(len(self.commonWords))

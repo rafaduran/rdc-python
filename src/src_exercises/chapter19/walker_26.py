@@ -20,7 +20,7 @@ import os
 import re
 import sys
 from PyQt4.QtCore import (QMutex, QMutexLocker, QReadLocker, QThread,
-        QWriteLocker, Qt, SIGNAL)
+        QWriteLocker, SIGNAL)
 
 
 class Walker(QThread):
@@ -33,21 +33,16 @@ class Walker(QThread):
     ENTITY_RE = re.compile(r"&(\w+?);|&#(\d+?);")
     SPLIT_RE = re.compile(r"\W+", re.IGNORECASE|re.MULTILINE)
 
-    def __init__(self, lock, parent=None):
+    def __init__(self, lock, filenames, filenamesForWords, commonWords, 
+            parent=None):
         super(Walker, self).__init__(parent)
         self.lock = lock
         self.stopped = False
         self.mutex = QMutex()
-        self.path = None
         self.completed = False
-
-
-    def initialize(self, files, filenamesForWords, commonWords, word_mutex):
-        self.stopped = False
-        self.files = files
+        self.filenames = filenames
         self.filenamesForWords = filenamesForWords
         self.commonWords = commonWords
-        self.word_mutex = word_mutex
         self.completed = False
 
 
@@ -62,12 +57,12 @@ class Walker(QThread):
 
 
     def run(self):
-        self.processFiles(self.path)
+        self.processFiles()
         self.stop()
-        self.emit(SIGNAL("finished(bool)"), self.completed)
+        self.emit(SIGNAL("finished(PyQt_PyObject)"), self)
 
 
-    def processFiles(self, path):
+    def processFiles(self):
         def unichrFromEntity(match):
             text = match.group(match.lastindex)
             if text.isdigit():
@@ -75,49 +70,47 @@ class Walker(QThread):
             u = htmlentitydefs.name2codepoint.get(text)
             return unichr(u) if u is not None else ""
 
-        for root, dirs, files in os.walk(path):
+        for fname in [fname for fname in self.filenames 
+                if fname.endswith((".htm",".html"))]:
             if self.isStopped():
                 return
-            for name in [name for name in files
-                         if name.endswith((".htm", ".html"))]:
-                fname = os.path.join(root, name)
-                if self.isStopped():
-                    return
-                words = set()
-                fh = None
-                try:
-                    fh = codecs.open(fname, "r", "UTF8", "ignore")
-                    text = fh.read()
-                except (IOError, OSError), e:
-                    sys.stderr.write("Error: {0}\n".format(e))
-                    continue
-                finally:
-                    if fh is not None:
-                        fh.close()
-                if self.isStopped():
-                    return
-                text = self.STRIPHTML_RE.sub("", text)
-                text = self.ENTITY_RE.sub(unichrFromEntity, text)
-                text = text.lower()
-                for word in self.SPLIT_RE.split(text):
-                    if (self.MIN_WORD_LEN <= len(word) <=
-                        self.MAX_WORD_LEN and
-                        word[0] not in self.INVALID_FIRST_OR_LAST and
-                        word[-1] not in self.INVALID_FIRST_OR_LAST):
-                        with QReadLocker(self.lock):
-                            new = word not in self.commonWords
-                        if new:
-                            words.add(word)
-                if self.isStopped():
-                    return
-                for word in words:
-                    with QWriteLocker(self.lock):
-                        files = self.filenamesForWords[word]
-                        if len(files) > self.COMMON_WORDS_THRESHOLD:
-                            del self.filenamesForWords[word]
-                            self.commonWords.add(word)
-                        else:
-                            files.add(unicode(fname))
-                self.emit(SIGNAL("indexed(QString)"), fname)
+            if self.isStopped():
+                return
+            words = set()
+            fh = None
+            try:
+                fh = codecs.open(fname, "r", "UTF8", "ignore")
+                text = fh.read()
+            except (IOError, OSError), e:
+                sys.stderr.write("Error: {0}\n".format(e))
+                continue
+            finally:
+                if fh is not None:
+                    fh.close()
+            if self.isStopped():
+                return
+            text = self.STRIPHTML_RE.sub("", text)
+            text = self.ENTITY_RE.sub(unichrFromEntity, text)
+            text = text.lower()
+            for word in self.SPLIT_RE.split(text):
+                if (self.MIN_WORD_LEN <= len(word) <=
+                    self.MAX_WORD_LEN and
+                    word[0] not in self.INVALID_FIRST_OR_LAST and
+                    word[-1] not in self.INVALID_FIRST_OR_LAST):
+                    with QReadLocker(self.lock):
+                        new = word not in self.commonWords
+                    if new:
+                        words.add(word)
+            if self.isStopped():
+                return
+            for word in words:
+                with QWriteLocker(self.lock):
+                    files = self.filenamesForWords[word]
+                    if len(files) > self.COMMON_WORDS_THRESHOLD:
+                        del self.filenamesForWords[word]
+                        self.commonWords.add(word)
+                    else:
+                        files.add(unicode(fname))
+            self.emit(SIGNAL("indexed(QString)"), fname)
         self.completed = True
 

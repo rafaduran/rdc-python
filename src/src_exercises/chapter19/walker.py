@@ -19,7 +19,7 @@ import htmlentitydefs
 import os
 import re
 import sys
-from PyQt4.QtCore import (QMutex, QThread, Qt, SIGNAL)
+from PyQt4.QtCore import (QMutex, QThread, SIGNAL)
 
 
 class Walker(QThread):
@@ -32,18 +32,15 @@ class Walker(QThread):
     ENTITY_RE = re.compile(r"&(\w+?);|&#(\d+?);")
     SPLIT_RE = re.compile(r"\W+", re.IGNORECASE|re.MULTILINE)
 
-    def __init__(self, lock, parent=None):
+    def __init__(self, lock, filenames, filenamesForWords, commonWords, 
+            parent=None):
         super(Walker, self).__init__(parent)
         self.lock = lock
         self.stopped = False
         self.mutex = QMutex()
         self.path = None
         self.completed = False
-
-
-    def initialize(self, path, filenamesForWords, commonWords):
-        self.stopped = False
-        self.path = path
+        self.filenames = filenames
         self.filenamesForWords = filenamesForWords
         self.commonWords = commonWords
         self.completed = False
