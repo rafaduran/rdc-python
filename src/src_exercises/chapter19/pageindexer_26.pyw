@@ -124,14 +124,15 @@ class Form(QDialog):
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
         filenames = []
+        last = 0
         for root, dirs, files in os.walk(unicode(path)):
             for name in files:
                 filenames.append(os.path.join(root, name))
                 if(len(filenames) == 1000):
-                    self.start_walker(filenames)
-                    filenames = []
+                    self.start_walker(filenames[last:last+1000])
+                    last = last + 1000
         else:
-            self.start_walker(filenames)
+            self.start_walker(filenames[last:])
 
 
     def start_walker(self, filenames):
