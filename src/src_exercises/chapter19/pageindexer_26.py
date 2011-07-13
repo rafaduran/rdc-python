@@ -30,10 +30,10 @@ class Form(QDialog):
     def __init__(self, parent=None):
         super(Form, self).__init__(parent)
 
+        self.mutex = QMutex()
         self.fileCount = 0
         self.filenamesForWords = collections.defaultdict(set)
         self.commonWords = set()
-        self.mutex = QMutex()
         self.lock = QReadWriteLock()
         self.path = QDir.homePath()
         pathLabel = QLabel("Indexing path:")
@@ -93,21 +93,24 @@ class Form(QDialog):
         layout.addWidget(self.statusLabel)
         self.setLayout(layout)
 
+        self.walkers = set()
         self.connect(self.pathButton, SIGNAL("clicked()"), self.setPath)
         self.connect(self.findEdit, SIGNAL("returnPressed()"), self.find)
         
-        self.walkers = set()
 
         self.setWindowTitle("Page Indexer")
-    
+
+
+    def stop_walkers(self):
+        with QMutexLocker(self.mutex):
+            for worker in self.walkers:
+                worker.stop()
+                worker.wait()
+            self.walkers = set()
+
 
     def setPath(self):
         self.pathButton.setEnabled(False)
-        with QMutexLocker(self.mutex):
-            for worker in self.walkers:
-                if worker.isRunning():
-                    worker.stop()
-                    worker.wait()
         path = QFileDialog.getExistingDirectory(self,
                     "Choose a Path to Index", self.path)
         if path.isEmpty():
@@ -115,6 +118,7 @@ class Form(QDialog):
                                      "button to start indexing")
             self.pathButton.setEnabled(True)
             return
+        self.statusLabel.setText("Scanning directories...")
         self.path = QDir.toNativeSeparators(path)
         self.findEdit.setFocus()
         self.pathLabel.setText(self.path)
@@ -143,13 +147,6 @@ class Form(QDialog):
         self.connect(worker, SIGNAL("finished(PyQt_PyObject)"), self.finished)
         with QMutexLocker(self.mutex):
             self.walkers.add(worker)
-
-
-    def stop_walkers(self):
-        with QMutexLocker(self.mutex):
-            for worker in self.walkers:
-                worker.stop()
-                worker.wait()
 
 
     def find(self):
@@ -214,20 +211,14 @@ class Form(QDialog):
 
 
     def reject(self):
-        with QMutexLockerer(self.mutex):
-            for worker in self.walkers:
-                if worker.isRunning():
-                    worker.stop()
-                self.finished(worker)
-            else:
-                self.accept()
+        if len(self.walkers):
+            self.stop_walkers()
+        else:
+            self.accept()
 
 
     def closeEvent(self, event=None):
-        with QMutexLocker(self.mutex):
-            for worker in self.walkers:
-                worker.stop()
-                worker.wait()
+        self.stop_walkers()
 
 
     def finishedIndexing(self):
