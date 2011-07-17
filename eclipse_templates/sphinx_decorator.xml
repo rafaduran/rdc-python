@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="decorator sphinx ready" enabled="true" name="sphinx_decorator">def ${name}(func):
+	"""
+	:py:func:`${name}` description
+	"""
+	def decorator(*args, **kwargs):
+		return func(*args, **kwargs)
+	return decorator</template></templates>

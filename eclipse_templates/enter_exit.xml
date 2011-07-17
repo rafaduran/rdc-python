@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Writes messages when entering and exiting" enabled="true" name="template_enter_exit_decorator">from __future__ import print_function
+
+@optional_arguments_decorator
+def enter_exit(func, args, kwargs, writer=print):
+    """
+    :py:func:`enter_exit` decorator by default prints messages when entering and exiting 
+    given function, useful while debugging. However can receive any kind of callable accepting
+    string argument.
+    
+    Args:
+    	func, args, kwargs: Needed by optional_arguments_decorator 
+    	writer: callable receiving an string for printing, logging, appending or whatever
+    
+    :Author: Rafael Durán Castañeda &lt;rafadurancastaneda@gmail.com&gt;
+    
+    .. warning::
+        :py:func:`enter_exit` needs :py:func:`optional_arguments_decorator` and
+        importing print function::
+        
+            from __future__ import print_function
+        
+    Simple usage::
+    
+        @enter_exit
+        def log_test():
+            pass
+            
+    so you can do:
+
+    &gt;&gt;&gt; log_test()
+    Entering log_test
+    Exiting log_test
+    
+        
+    Using logging::
+    
+        import logging
+        logging.basicConfig(level='INFO')
+        @enter_exit(writer=logging.info)
+        def log_test():
+            pass
+        
+    Now you can do:
+        
+    &gt;&gt;&gt; log_test()
+    INFO:root:Entering log_test
+    INFO:root:Exiting log_test
+        
+    
+    Once more::
+     
+		lista = []
+		@enter_exit(writer=lista.append)
+		def log_test():
+    		pass
+
+	So:
+	
+	&gt;&gt;&gt; log_test()
+	&gt;&gt;&gt; print(' '.join([cad for cad in lista]))
+	Entering log_test Exiting log_test
+	
+    """
+    writer("Entering {0}".format(func.__name__))
+    func(*args, **kwargs)
+    writer("Exiting {0}".format(func.__name__))</template></templates>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="false" context="org.python.pydev.editor.templates.python.modules" deleted="false" description="Module: Class" enabled="true" id="org.python.pydev.editor.templates.python.module.class" name="Module: Class">#!/usr/bin/env python
+# -*- Encoding: utf-8 -*-
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+"""
+:py:class:`${MyClass}` --- Very short description
+=======================================
+:py:class:`${MyClass}` long description
+
+.. moduleauthor::  ${user}
+"""
+
+class ${MyClass}(${object}):
+    """
+    Initialization description
+    
+    :params foo:
+    :type foo:
+    """
+
+
+    def __init__(self):
+        pass${cursor}</template></templates>

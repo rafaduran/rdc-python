@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Sphinx ready function" enabled="true" name="sphinx_func">def ${name}(${cursor}):
+	"""
+	:py:func:`${name}` description 
+	
+	Args:
+		...
+	"""
+	pass</template></templates>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Wrappes any number of exceptions, if no argument given wrappes Exception" enabled="true" name="template_error_wrapper_decorator">def error_wrapper(func, args, kwargs, errors=Exception):
+    """
+    :py:func:`error_wrapper` wrappes any given number of exceptions, if no
+    agrument then wrappes :py:class:`Exception`.
+    
+    Args:
+    	func, args, kwargs: needed by :py:func:`optional_arguments_decorator`
+    	errors: errors to be wrapped. Exception tuple, default :py:class:`Exception`
+    	
+    :Author: Rafael Durán Castañeda &lt;rafadurancastaneda@gmail.com&gt;
+    
+    .. warning::
+        
+        :py:func:`exception_wrapper` uses 
+        :py:func:`optional_arguments_decorator`, so it must be used together or 
+        imported
+        
+    Usage::
+    
+        @exception_wrapper(errors=(TypeError, ValueError, ZeroDivisionError))
+        def test(a, b):
+            return a / b
+        
+    And then you'll get:
+        
+    &gt;&gt;&gt; test(9, 0)
+    integer division or modulo by zero
+    &gt;&gt;&gt; test(5, "string")
+    unsupported operand type(s) for /: 'int' and 'str'
+    
+    This works nice with partial::
+    
+    	import functools
+    	
+    	os_io_error_wrapper = functools.partial(error_wrapper, errors=(IOError, OSError))
+    	
+    	@os_io_error_wrapper
+    	def test():
+    		file = open("Doesn't exist", "rb")
+    		
+    so:
+    
+    &gt;&gt;&gt; test()
+    [Errno 2] No such file or directory: "Doesn't exist"
+
+    """
+    try:
+        func(*args, **kwargs)
+    except errors as e:
+        # do something
+        # raise it
+        print(e) # or just print exception
+    return
+
+wrapper = optional_arguments_decorator(error_wrapper)</template></templates>
