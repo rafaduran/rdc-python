@@ -2,58 +2,17 @@
 # -*- Encoding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 """
-:py:mod:`src.decorators` --- Very short description
-===================================================
-Long description
+:py:mod:`~rdc_utils` --- RDC utils
+============================
+This module contains a mix of functions, most of them decorators, that can be
+useful in any project.
 
-.. module:: src.decorators 
-    :synopsis: Short description
-    
+.. module:: rdc_utils
+    :synopsis: RDC utils mix
+
 .. moduleauthor::"Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
-from __future__ import print_function
 import functools
-
-
-
-class memoized(object):
-    """
-    :py:class:`memoized` decorator caches a function's return value each time it is called.
-    If called later with the same arguments, the cached value is returned, and not re-evaluated.
-    
-    This decorator recipe has been taking from 
-    `Python decorators libray <http://wiki.python.org/moin/PythonDecoratorLibrary>`_
-    """
-    def __init__(self, func):
-        self.func = func
-        self.cache = {}
-    def __call__(self, *args):
-        try:
-            return self.cache[args]
-        except KeyError:
-            value = self.func(*args)
-            self.cache[args] = value
-            return value
-        except TypeError:
-            # uncachable -- for instance, passing a list as an argument.
-            # Better to not cache than to blow up entirely.
-            return self.func(*args)
-        def __repr__(self):
-            """Return the function's docstring."""
-            return self.func.__doc__
-        def __get__(self, obj, objtype):
-            """Support instance methods."""
-            return functools.partial(self.__call__, obj)
-
-
-def dummy_decorator(func):
-    """
-    :py:func:`dummy_decorator` description
-    """
-    def decorator(*args, **kwargs):
-        return func(*args, **kwargs)
-    return decorator
-
 
 def optional_arguments_decorator(real_decorator):
     """
@@ -100,85 +59,21 @@ def optional_arguments_decorator(real_decorator):
     return decorator
 
 
-def enter_exit(func, args, kwargs, writer=print):
-    """
-    :py:func:`enter_exit` decorator prints messages when entering and exiting 
-    given function, useful while debugging
-    
-    :params writer: takes end and start string and does something
-    :type writer: callable
-    
-    :Author: Rafael Durán Castañeda <rafadurancastaneda@gmail.com>
-    
-    .. warning::
-        :py:func:`enter_exit` needs :py:func:`optional_arguments_decorator` and
-        importing print function::
-        
-            from __future__ import print_function
-        
-    Simple usage::
-    
-        @enter_exit
-        def log_test():
-            pass
-            
-    so you can do:
-
-    >>> log_test()
-    Entering log_test
-    Exiting log_test
-    
-        
-    Using logging::
-    
-        import logging
-        logging.basicConfig(level='INFO')
-        @enter_exit(writer=logging.info)
-        def log_test():
-            pass
-        
-    Now you can do:
-        
-    >>> log_test()
-    INFO:root:Entering log_test
-    INFO:root:Exiting log_test
-        
-    
-    Once more::
-     
-        lista = []
-        @enter_exit(writer=lista.append)
-        def log_test():
-            pass
-
-    So:
-    
-    >>> log_test()
-    >>> print(' '.join([cad for cad in lista]))
-    Entering log_test Exiting log_test
-    
-    """
-    writer("Entering {0}".format(func.__name__))
-    func(*args, **kwargs)
-    writer("Exiting {0}".format(func.__name__))
-    
-    
 def error_wrapper(func, args, kwargs, errors=Exception):
     """
     :py:func:`error_wrapper` wrappes any given number of exceptions, if no
     agrument then wrappes :py:class:`Exception`.
     
-    :params func: function to be decorated
-    :params args: needed by :py:func:`optional_arguments_decorator`
-    :params kwargs: needed by :py:func:`optional_arguments_decorator`
-    :params errors: errors to be wrapped, default :py:class:`Exception`
-    :type errors: tuple or Exception
+    Args:
+        func, args, kwargs: needed by :py:func:`optional_arguments_decorator`
+        errors: errors to be wrapped. Exception tuple, default :py:class:`Exception`
+        
     :Author: Rafael Durán Castañeda <rafadurancastaneda@gmail.com>
     
     .. warning::
         
         :py:func:`exception_wrapper` uses 
-        :py:func:`~decorator.optional_arguments_decorator`, so it must be used together or 
+        :py:func:`optional_arguments_decorator`, so it must be used together or 
         imported
         
     Usage::
@@ -221,6 +116,36 @@ def error_wrapper(func, args, kwargs, errors=Exception):
 wrapper = optional_arguments_decorator(error_wrapper)
 
 
+class memoized(object):
+    """
+    :py:class:`memoized` decorator caches a function's return value each time it is called.
+    If called later with the same arguments, the cached value is returned, and not re-evaluated.
+    
+    This decorator recipe has been taking from 
+    `Python decorators libray <http://wiki.python.org/moin/PythonDecoratorLibrary>`_
+    """
+    def __init__(self, func):
+        self.func = func
+        self.cache = {}
+    def __call__(self, *args):
+        try:
+            return self.cache[args]
+        except KeyError:
+            value = self.func(*args)
+            self.cache[args] = value
+            return value
+        except TypeError:
+            # uncachable -- for instance, passing a list as an argument.
+            # Better to not cache than to blow up entirely.
+            return self.func(*args)
+        def __repr__(self):
+            """Return the function's docstring."""
+            return self.func.__doc__
+        def __get__(self, obj, objtype):
+            """Support instance methods."""
+            return functools.partial(self.__call__, obj)
+        
+
 def dict_from_class(cls, filter=('__module__',  '__name__',  '__weakref__', 
      '__dict__', '__doc__')):
     """
@@ -233,7 +158,11 @@ def dict_from_class(cls, filter=('__module__',  '__name__',  '__weakref__',
     
 def property_from_class(cls):
     """
-    Class decorator used to build a property attribute from a class
+    Class decorator used to build a property attribute from a class. 
+    
+    This decorator receipt was taken from 
+    `Jonathan Fine speech at Europython 2011
+    <http://ep2011.europython.eu/conference/talks/objects-and-classes-in-python-and-javascript>`_
     
     .. warning:::py:func:`exception_wrapper` uses 
         :py:func:`dict_from_class`, so it must be used together or imported
@@ -269,3 +198,7 @@ def property_from_class(cls):
 
     """
     return property(doc=cls.__doc__, **dict_from_class(cls))
+
+
+if __name__ == '__main__':
+    pass

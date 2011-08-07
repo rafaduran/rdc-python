@@ -16,7 +16,7 @@ import unittest
 
 class ${Name}(unittest.TestCase):
 	"""
-	Inherits from `unnittest.TestCase &lt;http://docs.python.org/library/unittest.html#unittest.TestCase&gt;`_ and tests something ...
+    Tests something ...
 	"""
 
 

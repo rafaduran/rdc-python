@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Class definition (subclass)" enabled="true" id="org.python.pydev.editor.templates.python.classo" name="classs">class ${class}(${object}):${cursor}
 	"""
-	:py:class:`${class}` description ... inherits from :py:class:`${object}`
-	"""</template></templates>
+	:py:class:`${class}` description
+	"""
+	pass</template></templates>

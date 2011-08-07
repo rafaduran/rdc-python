@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Uses property_from_class decorator" enabled="true" name="template_property_from_class">@property_from_class 
+class ${name}(object):
+	"""Value must be an ${type}"""
+    def fget(self):
+    	return self.__${name}
+    def fset(self, ${name}):
+    	# Ensure that value to be stored is an ${type}.
+        assert isinstance(${name}, ${type}), repr(${name})
+        self.__${name} = ${name}
+	def fdel(self):
+		del self.__${name}
+         	</template></templates>

@@ -14,6 +14,7 @@ Contents:
    source/src
    source/classes_test
    source/decorators
+   source/rdc_utils
 
 Indices and tables
 ==================

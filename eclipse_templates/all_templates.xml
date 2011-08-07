@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="false" context="org.python.pydev.editor.templates.python.modules" deleted="false" description="Module: Empty" enabled="true" id="org.python.pydev.editor.templates.python.module.empty" name="&lt;Empty&gt;">#!/usr/bin/env python
+# -*- Encoding: utf-8 -*-
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+"""
+:py:mod:`${module}` --- Very short description${cursor}
+=====================================
+Long description
+
+.. module:: ${module} 
+	:synopsis: Short description
+	
+.. moduleauthor::${user}
+"""
+${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="and keyword" enabled="true" id="org.python.pydev.editor.templates.python.and" name="and">and ${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="assert keyword" enabled="true" id="org.python.pydev.editor.templates.python.assert" name="assert">assert ${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="break keyword" enabled="true" id="org.python.pydev.editor.templates.python.break" name="break">break${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Class definition (simple)" enabled="true" id="org.python.pydev.editor.templates.python.class" name="class">class ${class}:${cursor}
+	"""
+	py:class:`${class}` description
+	"""
+	passs</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Class definition (subclass)" enabled="true" id="org.python.pydev.editor.templates.python.classo" name="classs">class ${class}(${object}):${cursor}
+	"""
+	:py:class:`${class}` description
+	"""
+	pass</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="continue keyword" enabled="true" id="org.python.pydev.editor.templates.python.continue" name="continue">continue${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Method definition (global)" enabled="true" id="org.python.pydev.editor.templates.python.def" name="def">def ${method}():${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Method definition (class)" enabled="true" id="org.python.pydev.editor.templates.python.defc" name="defc">def ${method}(self):${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Method definition (class - with parameters)" enabled="true" id="org.python.pydev.editor.templates.python.defp" name="defp">def ${method}(self, ${params}):${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="del keyword" enabled="true" id="org.python.pydev.editor.templates.python.del" name="del">del ${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="elif keyword" enabled="true" id="org.python.pydev.editor.templates.python.elif" name="elif">elif${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="else keyword" enabled="true" id="org.python.pydev.editor.templates.python.else" name="else">else${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="equals and not equals" enabled="true" id="org.python.pydev.editor.templates.python.eq" name="eq">def __eq__(self, o):
+    if isinstance(o, ${current_class}):
+        ${pass}${cursor}
+
+    return False
+
+def __ne__(self, o):
+	return not self == o</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="for keyword" enabled="true" id="org.python.pydev.editor.templates.python.for" name="for">for ${cursor}:</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="from keyword" enabled="true" id="org.python.pydev.editor.templates.python.from" name="from">from ${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="global keyword" enabled="true" id="org.python.pydev.editor.templates.python.global" name="global">global ${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="import keyword" enabled="true" id="org.python.pydev.editor.templates.python.import" name="import">import ${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="def __init__(self):" enabled="true" id="org.python.pydev.editor.templates.python.ini" name="ini">def __init__(self):${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="def __init__(self, ${params})" enabled="true" id="org.python.pydev.editor.templates.python.init" name="inip">def __init__(self, ${params}):${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="lambda keyword" enabled="true" id="org.python.pydev.editor.templates.python.lambda" name="lambda">lambda ${args}:${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Main function pattern." enabled="true" id="org.python.pydev.editor.templates.python.main" name="main">if __name__ == '__main__':
+    ${cursor}</template><template autoinsert="false" context="org.python.pydev.editor.templates.python.modules" deleted="false" description="Module: Class" enabled="true" id="org.python.pydev.editor.templates.python.module.class" name="Module: Class">#!/usr/bin/env python
+# -*- Encoding: utf-8 -*-
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+"""
+:py:class:`${MyClass}` --- Very short description
+=======================================
+:py:class:`${MyClass}` long description
+
+.. moduleauthor::  ${user}
+"""
+
+class ${MyClass}(${object}):
+    """
+    Initialization description
+    
+    Args.
+    	arg...
+    """
+
+
+    def __init__(self):
+        pass${cursor}</template><template autoinsert="false" context="org.python.pydev.editor.templates.python.modules" deleted="false" description="Command line parser template" enabled="true" name="Module: Command line parser">#!/usr/bin/env python
+# -*- Encoding: utf-8 -*-
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+"""
+:py:mod:`~${module}` --- Very short description
+======================================
+
+import optparse
+[...]
+def parser():
+    usage = "usage: %prog [options] arg"
+    parser = optparse.OptionParser(usage)
+    parser.add_option("-f", "--file", dest="filename",
+                      help="read data from FILENAME")
+    parser.add_option("-v", "--verbose",
+                      action="store_true", dest="verbose")
+    parser.add_option("-q", "--quiet",
+                      action="store_false", dest="verbose")
+    [...]
+    (options, args) = parser.parse_args()
+    if len(args) != 1:
+        parser.error("incorrect number of arguments")
+    if options.verbose:
+        print "reading %s..." % options.filename
+    [...]
+
+if __name__ == "__main__":
+    parser()</template><template autoinsert="false" context="org.python.pydev.editor.templates.python.modules" deleted="false" description="Module: Main" enabled="true" id="org.python.pydev.editor.templates.python.module.main" name="Module: Main">#!/usr/bin/env python
+# -*- Encoding: utf-8 -*-
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+"""
+:py:mod:`~${module}` --- Very short description
+======================================
+Long description
+
+.. module:: ${module}
+    :synopsis: Short description
+
+.. moduleauthor::${user}
+"""
+${cursor}
+
+if __name__ == '__main__':
+	pass</template><template autoinsert="false" context="org.python.pydev.editor.templates.python.modules" deleted="false" description="Mix of utils useful in most projects" enabled="true" name="Module: RDC_utils">#!/usr/bin/env python
+# -*- Encoding: utf-8 -*-
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+"""
+:py:mod:`~${module}` --- RDC utils
+============================
+This module contains a mix of functions, most of them decorators, that can be
+useful in any project.
+
+.. module:: ${module}
+    :synopsis: RDC utils mix
+
+.. moduleauthor::"Rafael Durán Castañeda &lt;rafadurancastaneda@gmail.com&gt;"
+"""
+import functools
+
+def optional_arguments_decorator(real_decorator):
+    """
+    :py:func:`optional_arguments_decorator` is a decorates others decorators, so 
+    they can be called with or without arguments. This receipt has been taken from 
+    chapter 2 of Martyn Alchin's "Pro Django" book.
+    
+    .. note::
+        Decorators using this receipt must used extra arguments as keywords 
+        arguments
+        
+    Usage example::
+       
+        @optional_arguments_decorator
+        def decorate(func, args, kwargs, prefix='Decorated'):
+            return '{0}: {1}'.format(prefix, func(*args, **kwargs))
+            
+        @decorate
+        def test(a, b):
+            return a + b     
+
+        print(test(13,4))
+
+        test = decorate(test, prefix='Decorated again')
+
+        print(test(13,4))
+    """
+    def decorator(func=None, **kwargs):
+        # This is the decorator that will be
+        # exposed to the rest of your program
+        def decorated(func):
+            # This returns the final, decorated
+            # function, regardless of how it was called
+            def wrapper(*a, **kw):
+                return real_decorator(func, a, kw, **kwargs)
+            return wrapper
+        if func is None:
+            # The decorator was called with arguments
+            def decorator(func):
+                return decorated(func)
+            return decorator
+        # The decorator was called without arguments
+        return decorated(func)
+    return decorator
+
+
+def error_wrapper(func, args, kwargs, errors=Exception):
+    """
+    :py:func:`error_wrapper` wrappes any given number of exceptions, if no
+    agrument then wrappes :py:class:`Exception`.
+    
+    Args:
+        func, args, kwargs: needed by :py:func:`optional_arguments_decorator`
+        errors: errors to be wrapped. Exception tuple, default :py:class:`Exception`
+        
+    :Author: Rafael Durán Castañeda &lt;rafadurancastaneda@gmail.com&gt;
+    
+    .. warning::
+        
+        :py:func:`exception_wrapper` uses 
+        :py:func:`optional_arguments_decorator`, so it must be used together or 
+        imported
+        
+    Usage::
+    
+        @exception_wrapper(errors=(TypeError, ValueError, ZeroDivisionError))
+        def test(a, b):
+            return a / b
+        
+    And then you'll get:
+        
+    &gt;&gt;&gt; test(9, 0)
+    integer division or modulo by zero
+    &gt;&gt;&gt; test(5, "string")
+    unsupported operand type(s) for /: 'int' and 'str'
+    
+    This works nice with partial::
+    
+        import functools
+        
+        os_io_error_wrapper = functools.partial(error_wrapper, errors=(IOError, OSError))
+        
+        @os_io_error_wrapper
+        def test():
+            file = open("Doesn't exist", "rb")
+            
+    so:
+    
+    &gt;&gt;&gt; test()
+    [Errno 2] No such file or directory: "Doesn't exist"
+
+    """
+    try:
+        func(*args, **kwargs)
+    except errors as e:
+        # do something
+        # raise it
+        print(e) # or just print exception
+    return
+
+wrapper = optional_arguments_decorator(error_wrapper)
+
+
+class memoized(object):
+    """
+    :py:class:`memoized` decorator caches a function's return value each time it is called.
+    If called later with the same arguments, the cached value is returned, and not re-evaluated.
+    
+    This decorator recipe has been taking from 
+    `Python decorators libray &lt;http://wiki.python.org/moin/PythonDecoratorLibrary&gt;`_
+    """
+    def __init__(self, func):
+        self.func = func
+        self.cache = {}
+    def __call__(self, *args):
+        try:
+            return self.cache[args]
+        except KeyError:
+            value = self.func(*args)
+            self.cache[args] = value
+            return value
+        except TypeError:
+            # uncachable -- for instance, passing a list as an argument.
+            # Better to not cache than to blow up entirely.
+            return self.func(*args)
+        def __repr__(self):
+            """Return the function's docstring."""
+            return self.func.__doc__
+        def __get__(self, obj, objtype):
+            """Support instance methods."""
+            return functools.partial(self.__call__, obj)
+        
+
+def dict_from_class(cls, filter=('__module__',  '__name__',  '__weakref__', 
+     '__dict__', '__doc__')):
+    """
+    Returns all attributes for a given class, filtering unwanted attributes
+    """
+    return dict(
+        (key, value)
+        for (key, value) in cls.__dict__.items()
+        if key not in filter )
+    
+def property_from_class(cls):
+    """
+    Class decorator used to build a property attribute from a class. 
+    
+    This decorator receipt was taken from 
+    `Jonathan Fine speech at Europython 2011
+    &lt;http://ep2011.europython.eu/conference/talks/objects-and-classes-in-python-and-javascript&gt;`_
+    
+    .. warning:::py:func:`exception_wrapper` uses 
+        :py:func:`dict_from_class`, so it must be used together or imported
+        
+    Usage::
+        
+        class A(object):
+            @property_from_class 
+            class value(object):
+                '''Value must be an integer'''
+                def fget(self):
+                    return self.__value
+                def fset(self, value):
+                    # Ensure that value to be stored is an int.
+                    assert isinstance(value, int), repr(value)
+                self.__value = value
+
+    Now you can do::
+    
+            &gt;&gt;&gt; a = A()
+            &gt;&gt;&gt; a.value = 4
+            &gt;&gt;&gt;print(a.value)
+            4
+            &gt;&gt;&gt;print(A.value.__doc__)
+            Value must be an integer
+            &gt;&gt;&gt;a.value = 'hola'
+            Traceback (most recent call last):
+            File "/home/rdc/workspace/decorator/decorator.py", line 161, in &lt;module&gt;
+            a.value = 'hola'
+            File "/home/rdc/workspace/decorator/decorator.py", line 150, in fset
+            assert isinstance(value, int), repr(value)
+            AssertionError: 'hola'
+
+    """
+    return property(doc=cls.__doc__, **dict_from_class(cls))
+
+
+if __name__ == '__main__':
+    pass</template><template autoinsert="false" context="org.python.pydev.editor.templates.python.modules" deleted="false" description="Module: Unittest" enabled="true" id="org.python.pydev.editor.templates.python.module.unittest" name="Module: Unittest">#!/usr/bin/env python
+# -*- Encoding: utf-8 -*-
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+"""
+:py:mod:`~${module}` --- Very short description
+======================================
+Long description
+
+.. module:: ${module}
+    :synopsis: Short description
+
+.. moduleauthor::${user}
+"""
+import unittest
+
+
+class ${Name}(unittest.TestCase):
+	"""
+	Tests something ...
+	"""
+
+
+    def test(self):
+    	"""
+    	Checks ...
+    	"""
+    	pass
+
+
+if __name__ == "__main__":
+    unittest.main()
+    </template><template autoinsert="false" context="org.python.pydev.editor.templates.python.modules" deleted="false" description="Module: Unittest with setUp and tearDown" enabled="true" id="org.python.pydev.editor.templates.python.module.setup_and_teardown" name="Module: Unittest with setUp and tearDown">#!/usr/bin/env python
+# -*- Encoding: utf-8 -*-
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+"""
+:py:mod:`~${module}` --- Very short description
+======================================
+Long description
+
+.. module:: ${module}
+    :synopsis: Short description
+
+.. moduleauthor::${user}
+"""
+import unittest
+
+
+class ${Name}(unittest.TestCase):
+	"""
+    Tests something ...
+	"""
+
+
+    def setUp(self):
+        pass
+
+
+    def tearDown(self):
+        pass
+
+    
+    def test(self):
+    	"""
+    	Checks ...
+    	"""
+    	pass
+
+
+if __name__ == "__main__":
+    unittest.main()
+    </template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="not keyword" enabled="true" id="org.python.pydev.editor.templates.python.not" name="not">not ${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="pass keyword" enabled="true" id="org.python.pydev.editor.templates.python.pass" name="pass">pass${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="pdb" enabled="true" id="org.python.pydev.editor.templates.python.pdb" name="pd">import pdb;pdb.set_trace()</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="print (considers python 2 or 3)" enabled="true" id="org.python.pydev.editor.templates.python.print" name="print">print${space_if_py2}${lparen_if_py3}${cursor}${rparen_if_py3}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="print '\n'.join(sorted(dir(value)))" enabled="true" id="org.python.pydev.editor.templates.python.printdir" name="printdir">print${space_if_py2}${lparen_if_py3}'\n'.join(sorted(dir(${cursor})))${rparen_if_py3}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="print current traceback" enabled="true" id="org.python.pydev.editor.templates.python.printexc" name="printexc">import traceback;traceback.print_exc()${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="property creation from inner methods" enabled="true" id="org.python.pydev.editor.templates.python.property_inner" name="property_inner">def ${prop}(): #@NoSelf
+    doc = """${Docstring}""" #@UnusedVariable
+   
+    def fget(self):
+        return self._${prop}
+       
+    def fset(self, value):
+        self._${prop} = value
+       
+    def fdel(self):
+        del self._${prop}
+       
+    return locals()
+   
+${prop} = property(**${prop}())${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="pydevd.settrace()" enabled="true" id="org.python.pydev.editor.templates.python.pydevd" name="pydevd">import pydevd;pydevd.settrace()</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="raise" enabled="true" id="org.python.pydev.editor.templates.python.raise" name="raise">raise ${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="raise RuntimeError('desc')" enabled="true" id="org.python.pydev.editor.templates.python.raiseruntimeerror" name="raiseruntimeerror">raise RuntimeError('${desc}')${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="return keyword" enabled="true" id="org.python.pydev.editor.templates.python.return" name="return">return ${cursor}</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="decorator sphinx ready" enabled="true" name="sphinx_decorator">def ${name}(func):
+	"""
+	:py:func:`${name}` description
+	"""
+	def decorator(*args, **kwargs):
+		return func(*args, **kwargs)
+	return decorator</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Sphinx ready function" enabled="true" name="sphinx_func">def ${name}(${cursor}):
+	"""
+	:py:func:`${name}` description 
+	
+	Args:
+		...
+	"""
+	pass</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Sphinx ready function" enabled="true" name="sphinx_func_returns">def ${name}(${cursor}):
+	"""
+	:py:func:`${name}` description 
+		
+	Args:
+		arg...
+	Returns
+		something
+	"""
+	return</template><template autoinsert="false" context="org.python.pydev.editor.templates.python" deleted="false" description="Call super(current_class, self).current_method()" enabled="true" id="org.python.pydev.editor.templates.python.super" name="super">super(${current_class}, self).${current_method}(${cursor})</template><template autoinsert="false" context="org.python.pydev.editor.templates.python" deleted="false" description="Call superclass.current_method(self)" enabled="true" id="org.python.pydev.editor.templates.python.super_raw" name="super_raw">${superclass}.${current_method}(self${cursor})</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Writes messages when entering and exiting" enabled="true" name="template_enter_exit_decorator">from __future__ import print_function
+
+@optional_arguments_decorator
+def enter_exit(func, args, kwargs, writer=print):
+    """
+    :py:func:`enter_exit` decorator by default prints messages when entering and exiting 
+    given function, useful while debugging. However can receive any kind of callable accepting
+    string argument.
+    
+    Args:
+    	func, args, kwargs: Needed by optional_arguments_decorator 
+    	writer: callable receiving an string for printing, logging, appending or whatever
+    
+    :Author: Rafael Durán Castañeda &lt;rafadurancastaneda@gmail.com&gt;
+    
+    .. warning::
+        :py:func:`enter_exit` needs :py:func:`optional_arguments_decorator` and
+        importing print function::
+        
+            from __future__ import print_function
+        
+    Simple usage::
+    
+        @enter_exit
+        def log_test():
+            pass
+            
+    so you can do:
+
+    &gt;&gt;&gt; log_test()
+    Entering log_test
+    Exiting log_test
+    
+        
+    Using logging::
+    
+        import logging
+        logging.basicConfig(level='INFO')
+        @enter_exit(writer=logging.info)
+        def log_test():
+            pass
+        
+    Now you can do:
+        
+    &gt;&gt;&gt; log_test()
+    INFO:root:Entering log_test
+    INFO:root:Exiting log_test
+        
+    
+    Once more::
+     
+		lista = []
+		@enter_exit(writer=lista.append)
+		def log_test():
+    		pass
+
+	So:
+	
+	&gt;&gt;&gt; log_test()
+	&gt;&gt;&gt; print(' '.join([cad for cad in lista]))
+	Entering log_test Exiting log_test
+	
+    """
+    writer("Entering {0}".format(func.__name__))
+    func(*args, **kwargs)
+    writer("Exiting {0}".format(func.__name__))</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Wrappes any number of exceptions, if no argument given wrappes Exception" enabled="true" name="template_error_wrapper_decorator">def error_wrapper(func, args, kwargs, errors=Exception):
+    """
+    :py:func:`error_wrapper` wrappes any given number of exceptions, if no
+    agrument then wrappes :py:class:`Exception`.
+    
+    Args:
+    	func, args, kwargs: needed by :py:func:`optional_arguments_decorator`
+    	errors: errors to be wrapped. Exception tuple, default :py:class:`Exception`
+    	
+    :Author: Rafael Durán Castañeda &lt;rafadurancastaneda@gmail.com&gt;
+    
+    .. warning::
+        
+        :py:func:`exception_wrapper` uses 
+        :py:func:`optional_arguments_decorator`, so it must be used together or 
+        imported
+        
+    Usage::
+    
+        @exception_wrapper(errors=(TypeError, ValueError, ZeroDivisionError))
+        def test(a, b):
+            return a / b
+        
+    And then you'll get:
+        
+    &gt;&gt;&gt; test(9, 0)
+    integer division or modulo by zero
+    &gt;&gt;&gt; test(5, "string")
+    unsupported operand type(s) for /: 'int' and 'str'
+    
+    This works nice with partial::
+    
+    	import functools
+    	
+    	os_io_error_wrapper = functools.partial(error_wrapper, errors=(IOError, OSError))
+    	
+    	@os_io_error_wrapper
+    	def test():
+    		file = open("Doesn't exist", "rb")
+    		
+    so:
+    
+    &gt;&gt;&gt; test()
+    [Errno 2] No such file or directory: "Doesn't exist"
+
+    """
+    try:
+        func(*args, **kwargs)
+    except errors as e:
+        # do something
+        # raise it
+        print(e) # or just print exception
+    return
+
+wrapper = optional_arguments_decorator(error_wrapper)</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="memoized caches function calls" enabled="true" name="template_memoized">import functools
+
+class memoized(object):
+    """
+    :py:class:`memoized` decorator caches a function's return value each time it is called.
+    If called later with the same arguments, the cached value is returned, and not re-evaluated.
+    
+    This decorator recipe has been taking from 
+    `Python decorators libray &lt;http://wiki.python.org/moin/PythonDecoratorLibrary&gt;`_
+    """
+    def __init__(self, func):
+        self.func = func
+        self.cache = {}
+    def __call__(self, *args):
+        try:
+            return self.cache[args]
+        except KeyError:
+            value = self.func(*args)
+            self.cache[args] = value
+            return value
+        except TypeError:
+            # uncachable -- for instance, passing a list as an argument.
+            # Better to not cache than to blow up entirely.
+            return self.func(*args)
+        def __repr__(self):
+            """Return the function's docstring."""
+            return self.func.__doc__
+        def __get__(self, obj, objtype):
+            """Support instance methods."""
+            return functools.partial(self.__call__, obj)</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Allows using decorator either with arguments or not" enabled="true" name="template_optional_decorator">def optional_arguments_decorator(real_decorator):
+    """
+    :py:func:`optional_arguments_decorator` is a decorates others decorators, so 
+    they can be called with or without arguments. This receipt has been taken from 
+    chapter 2 of Martyn Alchin's "Pro Django" book.
+    
+    .. note::
+        Decorators using this receipt must used extra arguments as keywords 
+        arguments
+        
+	Usage example::
+       
+        @optional_arguments_decorator
+        def decorate(func, args, kwargs, prefix='Decorated'):
+            return '{0}: {1}'.format(prefix, func(*args, **kwargs))
+            
+        @decorate
+        def test(a, b):
+        	return a + b     
+
+        print(test(13,4))
+
+        test = decorate(test, prefix='Decorated again')
+
+        print(test(13,4))
+    """
+    def decorator(func=None, **kwargs):
+        # This is the decorator that will be
+        # exposed to the rest of your program
+        def decorated(func):
+            # This returns the final, decorated
+            # function, regardless of how it was called
+            def wrapper(*a, **kw):
+                return real_decorator(func, a, kw, **kwargs)
+            return wrapper
+        if func is None:
+            # The decorator was called with arguments
+            def decorator(func):
+                return decorated(func)
+            return decorator
+        # The decorator was called without arguments
+        return decorated(func)
+    return decorator</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Uses property_from_class decorator" enabled="true" name="template_property_from_class">@property_from_class 
+class ${name}(object):
+	"""Value must be an ${type}"""
+    def fget(self):
+    	return self.__${name}
+    def fset(self, ${name}):
+    	# Ensure that value to be stored is an ${type}.
+        assert isinstance(${name}, ${type}), repr(${name})
+        self.__${name} = ${name}
+	def fdel(self):
+		del self.__${name}
+         	</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Class decortar used to build a property attribute from a class" enabled="true" name="template_property_from_class_decorator">def dict_from_class(cls, filter=('__module__',  '__name__',  '__weakref__', 
+	 '__dict__', '__doc__')):
+	"""
+	Returns all attributes for a given class, filtering unwanted attributes
+	"""
+    return dict(
+        (key, value)
+        for (key, value) in cls.__dict__.items()
+        if key not in filter )
+    
+def property_from_class(cls):
+	"""
+	Class decorator used to build a property attribute from a class
+	
+	`Jonathan Fine speech at Europython 2011
+    &lt;http://ep2011.europython.eu/conference/talks/objects-and-classes-in-python-and-javascript&gt;`_
+	
+	.. warning:::py:func:`exception_wrapper` uses 
+        :py:func:`dict_from_class`, so it must be used together or imported
+        
+    Usage::
+    	
+    	class A(object):
+    		@property_from_class 
+    		class value(object):
+        		'''Value must be an integer'''
+        		def fget(self):
+            		return self.__value
+        		def fset(self, value):
+            		# Ensure that value to be stored is an int.
+            		assert isinstance(value, int), repr(value)
+            	self.__value = value
+
+	Now you can do::
+    
+	        &gt;&gt;&gt; a = A()
+ 	       &gt;&gt;&gt; a.value = 4
+    	    &gt;&gt;&gt;print(a.value)
+        	4
+        	&gt;&gt;&gt;print(A.value.__doc__)
+        	Value must be an integer
+        	&gt;&gt;&gt;a.value = 'hola'
+        	Traceback (most recent call last):
+        	File "/home/rdc/workspace/decorator/decorator.py", line 161, in &lt;module&gt;
+        	a.value = 'hola'
+        	File "/home/rdc/workspace/decorator/decorator.py", line 150, in fset
+        	assert isinstance(value, int), repr(value)
+        	AssertionError: 'hola'
+
+	"""
+    return property(doc=cls.__doc__, **dict_from_class(cls))</template><template autoinsert="false" context="org.python.pydev.editor.templates.python" deleted="false" description="Complete test-case module with pyunit" enabled="true" id="org.python.pydev.editor.templates.python.testCase" name="testCase">import unittest
+
+class ${TestCase}(unittest.TestCase):
+    
+    def setUp(self):
+        unittest.TestCase.setUp(self)
+    
+    def tearDown(self):
+        unittest.TestCase.tearDown(self)
+        
+    def test${Met1}(self):
+        ${pass}${cursor}
+        
+if __name__ == '__main__':
+    unittest.main()</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="while keyword" enabled="true" id="org.python.pydev.editor.templates.python.while" name="while">while ${cursor}:</template><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="yield keyword" enabled="true" id="org.python.pydev.editor.templates.python.yield" name="yield">yield ${cursor}</template></templates>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><templates><template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Class decortar used to build a property attribute from a class" enabled="true" name="template_property_from_class_decorator">def dict_from_class(cls, filter=('__module__',  '__name__',  '__weakref__', 
+	 '__dict__', '__doc__')):
+	"""
+	Returns all attributes for a given class, filtering unwanted attributes
+	"""
+    return dict(
+        (key, value)
+        for (key, value) in cls.__dict__.items()
+        if key not in filter )
+    
+def property_from_class(cls):
+	"""
+	Class decorator used to build a property attribute from a class
+	
+	`Jonathan Fine speech at Europython 2011
+    &lt;http://ep2011.europython.eu/conference/talks/objects-and-classes-in-python-and-javascript&gt;`_
+	
+	.. warning:::py:func:`exception_wrapper` uses 
+        :py:func:`dict_from_class`, so it must be used together or imported
+        
+    Usage::
+    	
+    	class A(object):
+    		@property_from_class 
+    		class value(object):
+        		'''Value must be an integer'''
+        		def fget(self):
+            		return self.__value
+        		def fset(self, value):
+            		# Ensure that value to be stored is an int.
+            		assert isinstance(value, int), repr(value)
+            	self.__value = value
+
+	Now you can do::
+    
+	        &gt;&gt;&gt; a = A()
+ 	       &gt;&gt;&gt; a.value = 4
+    	    &gt;&gt;&gt;print(a.value)
+        	4
+        	&gt;&gt;&gt;print(A.value.__doc__)
+        	Value must be an integer
+        	&gt;&gt;&gt;a.value = 'hola'
+        	Traceback (most recent call last):
+        	File "/home/rdc/workspace/decorator/decorator.py", line 161, in &lt;module&gt;
+        	a.value = 'hola'
+        	File "/home/rdc/workspace/decorator/decorator.py", line 150, in fset
+        	assert isinstance(value, int), repr(value)
+        	AssertionError: 'hola'
+
+	"""
+    return property(doc=cls.__doc__, **dict_from_class(cls))</template></templates>

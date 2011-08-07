@@ -2,7 +2,7 @@
     """
     :py:func:`optional_arguments_decorator` is a decorates others decorators, so 
     they can be called with or without arguments. This receipt has been taken from 
-     chapter 2 of Martyn Alchin's "Pro Django" book.
+    chapter 2 of Martyn Alchin's "Pro Django" book.
     
     .. note::
         Decorators using this receipt must used extra arguments as keywords 
