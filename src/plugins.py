@@ -1,4 +1,6 @@
-class PluginMount(type):
+import abc
+
+class PluginMount(abc.ABCMeta):
     def __init__(cls, name, bases, attrs):
         if not hasattr(cls, 'plugins'):
             # This branch only executes when processing the mount point itself.
@@ -24,6 +26,10 @@ class PasswordValidator(object):
     to the user, so make sure it adequately describes what's wrong.
     """
     __metaclass__ = PluginMount
+    
+    @abc.abstractmethod
+    def validate(self, password):
+        pass
 
 def is_valid_password(password):
     """
@@ -61,7 +67,11 @@ class SpecialCharacters(PasswordValidator):
         if password.isalnum():
             raise ValueError('Passwords must contain at least one special character.')
 
+class Test(PasswordValidator):
+    pass
+
 if __name__ == '__main__':
     assert get_password_errors('pass') == ['Passwords must be at least 6 characters.',
                                            'Passwords must contain at least one special character.']
     assert is_valid_password('p@ssword')
+
