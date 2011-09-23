@@ -13,6 +13,8 @@ Long description
 """
 from __future__ import print_function
 import functools
+import itertools
+import collections
 
 
 
@@ -221,7 +223,7 @@ def error_wrapper(func, args, kwargs, errors=Exception):
 wrapper = optional_arguments_decorator(error_wrapper)
 
 
-def dict_from_class(cls, filter=('__module__',  '__name__',  '__weakref__', 
+def dict_from_class(cls, filtered=('__module__',  '__name__',  '__weakref__', 
      '__dict__', '__doc__')):
     """
     Returns all attributes for a given class, filtering unwanted attributes
@@ -229,7 +231,7 @@ def dict_from_class(cls, filter=('__module__',  '__name__',  '__weakref__',
     return dict(
         (key, value)
         for (key, value) in cls.__dict__.items()
-        if key not in filter )
+        if key not in filtered )
     
 def property_from_class(cls):
     """
@@ -269,3 +271,52 @@ def property_from_class(cls):
 
     """
     return property(doc=cls.__doc__, **dict_from_class(cls))
+
+
+class Singleton(object):
+    """
+    Initialization description
+    
+    Args.
+        arg...
+    """
+    __instances = {}
+    
+    @staticmethod
+    def get_instance(cls):
+        def inner(*args, **kwargs):
+            key = Singleton.to_key(cls,*args,**kwargs)
+            try:
+                return Singleton.__instances[key]
+            except KeyError:
+                instance = cls(*args, **kwargs)
+                Singleton.__instances[key] = instance
+                return instance
+        return inner
+    
+    
+    @staticmethod
+    def to_key(cls, *args, **kwargs):
+        return "{0}{1}{2}".format(cls, args, sorted(kwargs.items()))
+
+
+def constant_factory(value):
+    return itertools.repeat(value).next
+
+
+# none_dict returns None when trying to acces an undefined key instead 
+# of raising KeyError 
+none_dict = functools.partial(collections.defaultdict, constant_factory(None))
+        
+if __name__ == '__main__':
+    @Singleton.get_instance
+    class A(object):
+        def __init__(self,*args,**kwargs):
+            print("args:{0}".format([arg for arg in args]))
+            print("kwargs:{0}".format([item for item in kwargs.items()]))
+    
+    a = A([1,2])
+    aa = A(3,y=2,x=4)
+    aaa = A(3,x=4,y=2)
+    print(id(a),id(aa),id(aaa))
+        
