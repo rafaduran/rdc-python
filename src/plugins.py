@@ -67,8 +67,9 @@ class SpecialCharacters(PasswordValidator):
         if password.isalnum():
             raise ValueError('Passwords must contain at least one special character.')
 
-class Test(PasswordValidator):
-    pass
+# This raises an error:
+# class Test(PasswordValidator):
+#    pass
 
 if __name__ == '__main__':
     assert get_password_errors('pass') == ['Passwords must be at least 6 characters.',
